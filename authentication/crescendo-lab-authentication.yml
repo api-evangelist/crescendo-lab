@@ -1,0 +1,28 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/crescendo-lab-maacgo-openapi.yaml
+docs: https://sms.cresclab.com/developers.html
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  header: Authorization
+  format: 'Bearer <api_key>'
+  key_prefixes:
+  - sk_live_
+  - sk_test_
+  obtain: Generated on signup; managed in the dashboard at https://sms.cresclab.com/app.html#transactional
+  scoped: true
+  scope_note: >-
+    API keys are scoped (e.g. sms.read) and wallet-backed; a read-only key
+    cannot call send endpoints. Scopes gate which MCP tools succeed.
+  description: |-
+    `Authorization: Bearer <api_key>`. Production keys start with `sk_live_`,
+    test keys with `sk_test_` for environment separation. Sending still follows
+    the account wallet and deployment adapter settings.
+  sources:
+  - openapi/crescendo-lab-maacgo-openapi.yaml
+  - https://sms.cresclab.com/developers.html
