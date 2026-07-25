@@ -1,0 +1,22 @@
+generated: '2026-07-18'
+method: searched
+source: https://www.npmjs.com/package/maacgo + https://sms.cresclab.com/developers.html
+name: maacgo
+description: MAAC Go CLI — send Taiwan SMS from your terminal (NCC-compliant). Pairs with @maacgo/mcp for AI agents.
+version: 0.1.0
+license: MIT
+binary: maacgo
+package: packages/crescendo-lab-packages.yml
+install:
+- method: npm
+  command: npm install -g maacgo
+auth:
+  env: MAACGO_API_KEY
+  key_prefixes: [sk_test_, sk_live_]
+surface:
+  note: >-
+    Wraps the MAAC Go REST API (base https://sms.cresclab.com/api). Command
+    groups mirror the API resources — send single/broadcast SMS, list message
+    logs, and check wallet balance — from the terminal.
+  resources: [sms, broadcast, wallet]
+source: https://github.com/jinhsueh/cresclab-sms-self-serve

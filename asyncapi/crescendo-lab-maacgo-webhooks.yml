@@ -1,0 +1,27 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/crescendo-lab-maacgo-openapi.yaml (webhooks) + https://sms.cresclab.com/developers.html
+type: Webhooks
+api: MAAC Go API
+transport: HTTP POST to your configured endpoint
+configure_at: https://sms.cresclab.com/developers.html
+signing:
+  algorithm: HMAC-SHA256
+  header: X-Cresclab-Signature
+  verify: 'hex(hmac_sha256(webhook_secret, raw_request_body)) == header_value'
+delivery:
+  retry: exponential backoff 0s -> 2s -> 8s (3 attempts)
+  ack: any 2xx acknowledges
+events:
+- name: sms.sent
+  description: Message accepted by carrier (interim state).
+- name: sms.delivered
+  description: Message reached the recipient's handset (MAAC DLR confirmed).
+- name: sms.failed
+  description: Permanent delivery failure (invalid/blocked/undeliverable); wallet auto-refunded.
+payload:
+  shape: '{ event, data: { id, to, status, error }, created_at }'
+note: >-
+  MAAC Go publishes webhooks via the OpenAPI 3.1 webhooks block, not a standalone
+  AsyncAPI document. This file captures the webhook catalog verbatim from that
+  surface. No fabricated AsyncAPI spec is emitted.

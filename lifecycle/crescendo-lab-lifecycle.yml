@@ -1,0 +1,23 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/crescendo-lab-maacgo-openapi.yaml + https://sms.cresclab.com
+api: MAAC Go API
+versioning:
+  scheme: semantic (info.version)
+  current_version: 1.0.0
+  in_url: false
+  note: No dated or URL-path versioning; single production surface.
+deprecation:
+  policy_published: false
+  deprecated_operations: []
+  note: No deprecation/Sunset policy published; no operations marked deprecated in the OpenAPI.
+status_page:
+  published: false
+  health_endpoint: https://sms.cresclab.com/health
+  note: >-
+    A /health endpoint is advertised in llms.txt; no dedicated hosted status
+    page (status.html returns 404).
+sla:
+  support_response: 4h weekday response target (info@cresclab.com)
+support:
+  email: info@cresclab.com

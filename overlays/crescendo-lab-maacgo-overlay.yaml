@@ -1,0 +1,32 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay for MAAC Go API
+  version: 1.0.0
+extends: ../openapi/crescendo-lab-maacgo-openapi.yaml
+x-provenance:
+  generated: '2026-07-18'
+  method: generated
+  source: openapi/crescendo-lab-maacgo-openapi.yaml
+actions:
+- target: $.info
+  description: Annotate provider identity and agent-readiness discovered during enrichment.
+  update:
+    x-provider: Crescendo Lab (cresclab.com)
+    x-product: MAAC Go
+    x-llms-txt: https://sms.cresclab.com/llms.txt
+    x-mcp-server: '@maacgo/mcp (io.github.jinhsueh/maacgo-mcp)'
+    x-mcp-endpoint: https://sms.cresclab.com/api/mcp
+- target: $.info
+  description: Record the compliance regime this API enforces.
+  update:
+    x-compliance-regime: Taiwan NCC
+- target: $.components.securitySchemes.bearerAuth
+  description: Record documented key prefixes for environment separation.
+  update:
+    x-key-prefixes:
+    - sk_live_
+    - sk_test_
+- target: $.paths./sms/send.post
+  description: Flag rate-limit signaling on the primary send operation.
+  update:
+    x-rate-limit-signal: '429 rate_limited with retry_after when available'

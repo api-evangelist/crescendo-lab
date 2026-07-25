@@ -1,0 +1,14 @@
+{
+  "repo": "crescendo-lab",
+  "feeds": [
+    {
+      "source": "https://sms.cresclab.com/developers.html#api",
+      "feed_url": "https://sms.cresclab.com/developers.html#api",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-07-20T13:31:34Z"
+}

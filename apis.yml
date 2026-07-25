@@ -1,20 +1,163 @@
 aid: crescendo-lab
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/crescendo-lab.png
 name: Crescendo Lab
-description: Crescendo Lab is a company surfaced as a portfolio company of 500-global and added to the
-  API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Crescendo Lab is a Taiwan-based, Asia-leading AI omnichannel customer
+  communication software company (cresclab.com) serving 800+ global brands, and
+  a LINE Biz-Solutions Gold Partner. Its platform spans MAAC (AI marketing
+  automation), CAAC (conversational applications), and DAAC (data intelligence)
+  across LINE, WhatsApp, SMS, email, and social channels. Its developer-facing
+  surface is MAAC Go (sms.cresclab.com) — a self-serve, NCC-compliant Taiwan SMS
+  API with a published OpenAPI spec, first-party Node/Python SDKs, a CLI, an
+  official MCP server, and delivery webhooks. Surfaced as a 500 Global portfolio
+  company and enriched into the API Evangelist network.
 url: https://raw.githubusercontent.com/api-evangelist/crescendo-lab/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - 500-global
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: portfolio-lead-enriched
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
-apis: []
+- SMS
+- Messaging
+- Marketing Automation
+- Customer Engagement
+- Taiwan
+- Omnichannel
+- MCP
+apis:
+- aid: crescendo-lab:crescendo-lab-broadcast-api
+  name: Crescendo Lab Broadcast API
+  description: >-
+    Bulk (1-to-many) SMS. Small batches dispatch inline; >30 recipients queue asynchronously.
+  humanURL: https://sms.cresclab.com/developers.html
+  baseURL: https://sms.cresclab.com/api
+  tags:
+  - Broadcast
+  properties:
+  - type: OpenAPI
+    url: openapi/crescendo-lab-broadcast-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/crescendo-lab-maacgo-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/crescendo-lab-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/crescendo-lab-lifecycle.yml
+  - type: Conformance
+    url: conformance/crescendo-lab-conformance.yml
+  - type: DataModel
+    url: data-model/crescendo-lab-data-model.yml
+  - type: Sandbox
+    url: sandbox/crescendo-lab-sandbox.yml
+  - type: Documentation
+    url: https://sms.cresclab.com/developers.html#api
+  - type: APIReference
+    url: https://sms.cresclab.com/openapi.yaml
+  - type: GettingStarted
+    url: https://sms.cresclab.com/developers.html
+- aid: crescendo-lab:crescendo-lab-contacts-api
+  name: Crescendo Lab Contacts API
+  description: Address book with NCC-consent tracking.
+  humanURL: https://sms.cresclab.com/developers.html
+  baseURL: https://sms.cresclab.com/api
+  tags:
+  - Contacts
+  properties:
+  - type: OpenAPI
+    url: openapi/crescendo-lab-contacts-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/crescendo-lab-maacgo-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/crescendo-lab-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/crescendo-lab-lifecycle.yml
+  - type: Conformance
+    url: conformance/crescendo-lab-conformance.yml
+  - type: DataModel
+    url: data-model/crescendo-lab-data-model.yml
+  - type: Sandbox
+    url: sandbox/crescendo-lab-sandbox.yml
+  - type: Documentation
+    url: https://sms.cresclab.com/developers.html#api
+  - type: APIReference
+    url: https://sms.cresclab.com/openapi.yaml
+  - type: GettingStarted
+    url: https://sms.cresclab.com/developers.html
+- aid: crescendo-lab:crescendo-lab-sms-api
+  name: Crescendo Lab SMS API
+  description: Transactional (1-to-1) SMS send + status.
+  humanURL: https://sms.cresclab.com/developers.html
+  baseURL: https://sms.cresclab.com/api
+  tags:
+  - SMS
+  properties:
+  - type: OpenAPI
+    url: openapi/crescendo-lab-sms-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/crescendo-lab-maacgo-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/crescendo-lab-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/crescendo-lab-lifecycle.yml
+  - type: Conformance
+    url: conformance/crescendo-lab-conformance.yml
+  - type: DataModel
+    url: data-model/crescendo-lab-data-model.yml
+  - type: Sandbox
+    url: sandbox/crescendo-lab-sandbox.yml
+  - type: Documentation
+    url: https://sms.cresclab.com/developers.html#api
+  - type: APIReference
+    url: https://sms.cresclab.com/openapi.yaml
+  - type: GettingStarted
+    url: https://sms.cresclab.com/developers.html
+- aid: crescendo-lab:crescendo-lab-teams-api
+  name: Crescendo Lab Teams API
+  description: >-
+    Cost-attribution teams. Tag sends with a team to see which team sent/spent how much (shared wallet
+    — reporting only, not a wallet split).
+  humanURL: https://sms.cresclab.com/developers.html
+  baseURL: https://sms.cresclab.com/api
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/crescendo-lab-teams-api-openapi.yml
+  - type: Webhooks
+    url: asyncapi/crescendo-lab-maacgo-webhooks.yml
+  - type: ErrorCatalog
+    url: errors/crescendo-lab-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/crescendo-lab-lifecycle.yml
+  - type: Conformance
+    url: conformance/crescendo-lab-conformance.yml
+  - type: DataModel
+    url: data-model/crescendo-lab-data-model.yml
+  - type: Sandbox
+    url: sandbox/crescendo-lab-sandbox.yml
+  - type: Documentation
+    url: https://sms.cresclab.com/developers.html#api
+  - type: APIReference
+    url: https://sms.cresclab.com/openapi.yaml
+  - type: GettingStarted
+    url: https://sms.cresclab.com/developers.html
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -23,3 +166,48 @@ maintainers:
 common:
 - type: Website
   url: https://cresclab.com
+- type: DeveloperPortal
+  url: https://sms.cresclab.com/developers.html
+- type: Documentation
+  url: https://sms.cresclab.com/developers.html#api
+- type: Blog
+  url: https://blog.cresclab.com/zh-tw
+- type: HelpCenter
+  url: https://crescendolab.zendesk.com/hc/zh-tw
+- type: Pricing
+  url: https://cresclab.com/pricing
+- type: SignUp
+  url: https://sms.cresclab.com/app.html
+- type: TermsOfService
+  url: https://sms.cresclab.com/terms.html
+- type: PrivacyPolicy
+  url: https://sms.cresclab.com/privacy.html
+- type: GitHubOrganization
+  url: https://github.com/Crescendo-Lab
+- type: LLMsTxt
+  url: llms/crescendo-lab-llms.txt
+- type: SDKs
+  url: packages/crescendo-lab-packages.yml
+- type: Packages
+  url: packages/crescendo-lab-packages.yml
+- type: CLI
+  url: cli/crescendo-lab-cli.yml
+- type: MCPServer
+  url: mcp/crescendo-lab-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Authentication
+  url: authentication/crescendo-lab-authentication.yml
+- type: Conventions
+  url: conventions/crescendo-lab-conventions.yml
+- type: Idempotency
+  url: conventions/crescendo-lab-conventions.yml
+- type: DomainSecurity
+  url: security/crescendo-lab-domain-security.yml
+- type: WellKnown
+  url: well-known/crescendo-lab-well-known.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

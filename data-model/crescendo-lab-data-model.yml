@@ -1,0 +1,48 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/crescendo-lab-maacgo-openapi.yaml
+api: MAAC Go API
+entities:
+- name: Sms
+  id_field: id
+  id_prefix: sms_
+  key_fields: [to, body, status, segments, cost_cents, gateway_ref]
+- name: Broadcast
+  id_field: id
+  key_fields: [name, recipient_count, status, delivered_count, failed_count, scheduled_at]
+- name: Contact
+  id_field: id
+  key_fields: [phone, first_name, last_name, tags, consent_source]
+- name: Team
+  id_field: id
+  key_fields: [name, archived, msg_count, cost_cents]
+- name: Wallet
+  id_field: null
+  key_fields: [balance_cents]
+- name: WebhookEvent
+  id_field: null
+  key_fields: [event, data.id, data.status, created_at]
+relationships:
+- from: Sms
+  to: Team
+  type: belongs_to
+  via: team
+  note: Optional cost-attribution tag; null = 未分類 (untagged).
+- from: Broadcast
+  to: Team
+  type: belongs_to
+  via: team
+- from: Broadcast
+  to: Sms
+  type: has_many
+  via: recipients
+  note: Each broadcast fans out to individual messages tracked via DLR webhooks.
+- from: WebhookEvent
+  to: Sms
+  type: belongs_to
+  via: data.id
+- from: Sms
+  to: Wallet
+  type: belongs_to
+  via: cost_cents
+  note: Sending debits the shared account wallet; failed sends auto-refund.

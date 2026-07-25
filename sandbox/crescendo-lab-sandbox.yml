@@ -1,0 +1,28 @@
+generated: '2026-07-18'
+method: searched
+source: https://sms.cresclab.com/developers.html + openapi/crescendo-lab-maacgo-openapi.yaml
+summary: >-
+  MAAC Go separates environments by API-key prefix rather than a distinct host.
+  Test keys (sk_test_) and live keys (sk_live_) hit the same base URL; new
+  accounts receive NT$50 trial credit so real test SMS can be sent immediately.
+base_url: https://sms.cresclab.com/api
+modes:
+- name: test
+  key_prefix: sk_test_
+  description: Development / environment-separation key.
+- name: live
+  key_prefix: sk_live_
+  description: Production key for real sends.
+trial_credit:
+  amount: NT$50
+  note: Granted on signup — enough to send real test SMS immediately.
+mock_adapter:
+  supported: true
+  note: >-
+    Deployments may use a mock SMS/payment adapter so sending does not debit the
+    wallet; otherwise sends debit the account balance per NT$0.78/segment.
+test_values:
+  note: >-
+    No fixed published test phone numbers or fixture tokens. E.164 numbers
+    (+886912345678) or TW local (0912345678) are accepted; delivery is real
+    unless a mock adapter is configured.

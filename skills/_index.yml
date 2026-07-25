@@ -1,0 +1,15 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/crescendo-lab-maacgo-openapi.yaml
+api: MAAC Go API
+note: >-
+  Packaged Agent Skills generated from real MAAC Go operationIds. MAAC Go also
+  ships an official MCP server (@maacgo/mcp) whose tools map 1:1 to these
+  operations — see mcp/crescendo-lab-mcp.yml.
+skills:
+- name: send-transactional-sms
+  file: crescendo-lab-send-sms.md
+  operations: [sendSms, getSms]
+- name: send-broadcast-campaign
+  file: crescendo-lab-broadcast.md
+  operations: [createBroadcast, listBroadcasts, getMetrics]

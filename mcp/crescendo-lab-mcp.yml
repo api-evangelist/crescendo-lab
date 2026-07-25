@@ -1,0 +1,56 @@
+generated: '2026-07-18'
+method: searched
+source: https://sms.cresclab.com/mcp.html + MCP Registry io.github.jinhsueh/maacgo-mcp
+name: MAAC Go MCP
+description: >-
+  Official hosted + local MCP server for MAAC Go (Crescendo Lab's self-serve
+  Taiwan SMS platform). Lets Claude / Cursor / Windsurf / Codex send SMS, run
+  broadcasts, pull logs, and check wallet balance over the MAAC Go REST API.
+status: published
+registry:
+  id: io.github.jinhsueh/maacgo-mcp
+  version: 0.2.1
+  url: https://registry.modelcontextprotocol.io/v0/servers?search=maacgo
+package:
+  npm: '@maacgo/mcp'
+  version: 0.2.1
+auth:
+  scheme: bearer
+  env: MAACGO_API_KEY
+  key_prefixes: [sk_test_, sk_live_]
+transports:
+- type: stdio
+  install: npx -y @maacgo/mcp
+- type: http
+  endpoint: https://sms.cresclab.com/api/mcp
+  protocol: JSON-RPC 2.0
+  auth_header: 'Authorization: Bearer sk_...'
+tools:
+- name: send_sms
+  description: Send a single transactional SMS to one recipient.
+  operation: sendSms
+- name: send_broadcast
+  description: One-to-many broadcast with {{var}} personalization.
+  operation: createBroadcast
+- name: list_sms
+  description: View recent messages sent.
+  operation: listSms
+- name: get_sms
+  description: Check individual message status (queued/sent/delivered/failed).
+  operation: getSms
+- name: list_broadcasts
+  description: View broadcast history and campaign delivery rates.
+  operation: listBroadcasts
+- name: sms_metrics
+  description: Aggregate stats (success rate, failures, latency, costs).
+  operation: getMetrics
+- name: wallet_balance
+  description: Check account balance.
+- name: wallet_events
+  description: View transaction history (top-ups, charges, refunds).
+- name: get_me
+  description: Verify API key validity and account info.
+notes: >-
+  Scopes on the API key determine which tools succeed (a sms.read-only key
+  cannot call send_sms). On 402 insufficient_balance the response carries a
+  topup_url the wrapper surfaces to the user.

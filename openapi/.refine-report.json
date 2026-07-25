@@ -1,0 +1,20 @@
+{
+  "provider": "crescendo-lab",
+  "sources": [
+    "crescendo-lab-broadcast-api-openapi.yml",
+    "crescendo-lab-contacts-api-openapi.yml",
+    "crescendo-lab-sms-api-openapi.yml",
+    "crescendo-lab-teams-api-openapi.yml"
+  ],
+  "outputs": [
+    "crescendo-lab-broadcast-api-openapi.yml",
+    "crescendo-lab-contacts-api-openapi.yml",
+    "crescendo-lab-sms-api-openapi.yml",
+    "crescendo-lab-teams-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

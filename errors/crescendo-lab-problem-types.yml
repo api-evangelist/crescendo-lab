@@ -1,0 +1,46 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/crescendo-lab-maacgo-openapi.yaml + https://sms.cresclab.com/developers.html
+format: custom-json
+media_type: application/json
+envelope:
+  fields:
+    error: Machine-readable error code (string).
+    hint: Optional human remediation hint.
+    issues: 'Optional array of { level: block|warn, code, reason } for NCC compliance failures.'
+notes: >-
+  MAAC Go does not use RFC 9457 problem+json; errors return a flat JSON body
+  keyed on `error`. NCC compliance rejections attach an `issues[]` array. Codes
+  below are derived from OpenAPI response descriptions and examples.
+problem_types:
+- code: ncc_blocked
+  http_status: 400
+  title: NCC compliance failure
+  detail: >-
+    Message violates Taiwan NCC rules — e.g. blocklisted URL shortener, missing
+    【brand】 prefix or STOP/退訂 opt-out, or phishing keywords. issues[] carries
+    per-rule level/code/reason (e.g. SHORTENER).
+  remediation: Revise copy per /api/ncc-rules; do not bypass.
+- code: validation_error
+  http_status: 400
+  title: Validation failure
+  detail: 'Malformed request — invalid_phones, recipients_required, too_many_recipients.'
+- code: unauthorized
+  http_status: 401
+  title: Auth missing / invalid
+  detail: Missing or invalid Bearer key.
+  remediation: Provide a valid sk_live_/sk_test_ key with sufficient scope.
+- code: insufficient_balance
+  http_status: 402
+  title: Wallet balance insufficient
+  detail: Prepaid wallet cannot cover the send. Response includes a topup_url.
+  remediation: Open topup_url, top up, then retry.
+- code: not_found
+  http_status: 404
+  title: Resource not found
+  detail: Unknown message/broadcast id.
+- code: rate_limited
+  http_status: 429
+  title: Rate limit exceeded
+  detail: Too many requests. Body carries limit/used; retry_after header when available.
+  remediation: Back off per retry_after.

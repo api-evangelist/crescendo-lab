@@ -1,0 +1,30 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/crescendo-lab-maacgo-openapi.yaml + https://sms.cresclab.com/developers.html
+api: MAAC Go API
+standards:
+- id: oauth2
+  conforms: false
+  evidence: Auth is HTTP Bearer API keys (sk_live_/sk_test_), not OAuth 2.0.
+- id: rfc9457
+  conforms: false
+  evidence: Errors use a custom flat JSON envelope ({error, hint, issues}), not application/problem+json.
+- id: pagination
+  conforms: true
+  evidence: /contacts supports page + limit + total; /sms/list supports a bounded limit cursor with filters.
+- id: idempotency
+  conforms: partial
+  evidence: >-
+    Team creation is idempotent on name and contact bulk-create dedupes; no
+    Idempotency-Key header on send operations.
+- id: webhooks-hmac
+  conforms: true
+  evidence: Outbound webhooks signed HMAC-SHA256 via X-Cresclab-Signature.
+- id: e164
+  conforms: true
+  evidence: Phone numbers accept E.164 (+886912345678) alongside TW local format.
+- id: ncc
+  conforms: true
+  evidence: >-
+    Enforces Taiwan NCC rules (brand prefix, STOP/退訂 opt-out, shortener +
+    phishing blocklist) at the API layer.

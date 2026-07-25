@@ -1,0 +1,55 @@
+generated: '2026-07-18'
+method: searched
+source: https://sms.cresclab.com/developers.html + openapi/crescendo-lab-maacgo-openapi.yaml
+api: MAAC Go API
+base_url: https://sms.cresclab.com/api
+auth:
+  style: bearer
+  header: Authorization
+  detail: See authentication/crescendo-lab-authentication.yml
+idempotency:
+  supported: true
+  style: resource-natural
+  detail: >-
+    Team creation (POST /teams) is idempotent on name and re-creating an
+    archived team un-archives it. Teams are also auto-created on first use via
+    the `team` field on /sms/send and /broadcast, so a repeated tag does not
+    duplicate. Contact create dedupes duplicate phones within a batch and skips
+    existing (user_id, phone) pairs. No explicit Idempotency-Key header is
+    documented for /sms/send.
+pagination:
+  style: page-number
+  detail: >-
+    /contacts uses page + limit (limit max 500, default 50) with total in the
+    response. /sms/list uses a limit cursor (max 200, default 50) plus status
+    and team filters. List responses wrap collections in a named array with an
+    `ok` boolean.
+error_envelope:
+  format: custom-json
+  shape: '{ error: string, hint?: string, issues?: [{ level, code, reason }] }'
+  detail: See errors/crescendo-lab-problem-types.yml
+rate_limits:
+  signaled_via: HTTP 429
+  body_error: rate_limited
+  headers: retry_after (when available); response body carries limit/used details
+  policy: New accounts 200 msgs/24h; established accounts ~1000/hr
+versioning:
+  scheme: info.version in OpenAPI (1.0.0); no URL/date version segment
+webhooks:
+  signing: HMAC-SHA256
+  header: X-Cresclab-Signature
+  verify: 'hmac_sha256(webhook_secret, raw_body).hex() == header'
+  events: [sms.sent, sms.delivered, sms.failed]
+  detail: See asyncapi/crescendo-lab-maacgo-webhooks.yml
+phone_format:
+  accepted: [E.164 (+886912345678), TW local (0912345678)]
+compliance:
+  regime: Taiwan NCC
+  rules: >-
+    Marketing SMS must carry a 【brand】 prefix and a STOP/退訂 opt-out; URL
+    shorteners (bit.ly / reurl.cc / lihi.cc) and phishing keywords are blocked
+    at the API layer (see /api/ncc-rules).
+cross_links:
+  errors: errors/crescendo-lab-problem-types.yml
+  lifecycle: lifecycle/crescendo-lab-lifecycle.yml
+  authentication: authentication/crescendo-lab-authentication.yml

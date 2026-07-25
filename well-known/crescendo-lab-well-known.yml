@@ -1,0 +1,27 @@
+generated: '2026-07-18'
+method: probed
+source: live probes of cresclab.com + sms.cresclab.com
+summary: No /.well-known/ documents published on either host as of this probe.
+probes:
+- host: cresclab.com
+  path: /.well-known/security.txt
+  status: 404
+- host: cresclab.com
+  path: /.well-known/openid-configuration
+  status: 404
+- host: cresclab.com
+  path: /.well-known/oauth-authorization-server
+  status: 404
+- host: cresclab.com
+  path: /.well-known/api-catalog
+  status: 404
+- host: cresclab.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+- host: sms.cresclab.com
+  path: /.well-known/security.txt
+  status: 404
+- host: sms.cresclab.com
+  path: /.well-known/ai-plugin.json
+  status: 404
+files: []
