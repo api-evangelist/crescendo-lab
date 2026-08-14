@@ -32,7 +32,7 @@ x-tier: enriched
 x-tier-reason: portfolio-lead-enriched
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-18'
+modified: '2026-08-13'
 tags:
 - Company
 - SMS
@@ -179,6 +179,8 @@ common:
 - type: Pricing
   url: https://cresclab.com/pricing
 - type: SignUp
+  url: https://sms.cresclab.com/signup.html
+- type: Login
   url: https://sms.cresclab.com/app.html
 - type: TermsOfService
   url: https://sms.cresclab.com/terms.html
@@ -196,8 +198,20 @@ common:
   url: cli/crescendo-lab-cli.yml
 - type: MCPServer
   url: mcp/crescendo-lab-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/crescendo-lab-tool-crosswalk.yml
 - type: AgentSkill
   url: skills/_index.yml
+- type: Plans
+  url: plans/crescendo-lab-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/crescendo-lab-rate-limits.yml
+- type: APIReference
+  url: https://sms.cresclab.com/openapi.yaml
+- type: GettingStarted
+  url: https://sms.cresclab.com/developers.html
+- type: Sandbox
+  url: sandbox/crescendo-lab-sandbox.yml
 - type: Authentication
   url: authentication/crescendo-lab-authentication.yml
 - type: Conventions
@@ -206,10 +220,12 @@ common:
   url: conventions/crescendo-lab-conventions.yml
 - type: DomainSecurity
   url: security/crescendo-lab-domain-security.yml
-- type: WellKnown
-  url: well-known/crescendo-lab-well-known.yml
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 5
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+  note: >-
+    WellKnown pointer removed 2026-08-13 — well-known/crescendo-lab-well-known.yml
+    records 18 probes across both hosts and every one returned 404, so the
+    artifact documents an absence and must not assert a served surface.
