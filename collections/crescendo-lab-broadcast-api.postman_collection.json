@@ -1,0 +1,407 @@
+{
+  "item": [
+    {
+      "id": "502f965a-b10d-43ea-86a5-ba822616b889",
+      "name": "Broadcast",
+      "description": {
+        "content": "Bulk (1-to-many) SMS. Small batches dispatch inline; >30 recipients queue asynchronously.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5a9759d2-e8c4-4180-bf54-7db2b2089051",
+          "name": "Create a broadcast (1-to-many)",
+          "request": {
+            "name": "Create a broadcast (1-to-many)",
+            "description": {
+              "content": "≤ 30 recipients dispatch inline and return 200 with `delivered` / `failed` counts.\n\\> 30 recipients queue async and return 202 with `status: \"queued\"`; cron dispatches in\nbatches of 40 every 5 min; DLR webhooks flip individual messages.\n\nSchedule for later by passing `scheduled_at` (ISO 8601); funds reserve immediately,\nactual charge happens at send time.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "broadcast"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"<string>\",\n  \"recipients\": [\n    \"<string>\"\n  ],\n  \"name\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"from\": \"<string>\",\n  \"team\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dd19ebd5-a77f-4e2c-8a3f-02655bc5ee66",
+              "name": "Sent inline (small broadcast)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "broadcast"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"body\": \"<string>\",\n  \"recipients\": [\n    \"<string>\"\n  ],\n  \"name\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"from\": \"<string>\",\n  \"team\": \"電商\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": true,\n  \"broadcast_id\": \"string\",\n  \"status\": \"sent\",\n  \"recipient_count\": 719,\n  \"delivered\": 1234,\n  \"failed\": 4917,\n  \"cost_cents\": 6545,\n  \"refund_cents\": 462,\n  \"balance_cents\": 9043,\n  \"team\": \"string\",\n  \"team_created\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d17136eb-ed21-40af-aa01-52b188b4aff5",
+              "name": "Queued for async dispatch (large broadcast)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "broadcast"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"body\": \"<string>\",\n  \"recipients\": [\n    \"<string>\"\n  ],\n  \"name\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"from\": \"<string>\",\n  \"team\": \"電商\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": true,\n  \"broadcast_id\": \"string\",\n  \"status\": \"queued\",\n  \"recipient_count\": 7125,\n  \"cost_cents\": 6199,\n  \"dispatch\": \"async\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e99af6d8-9364-4310-bdff-da91457f1335",
+              "name": "recipients_required / invalid_phones / ncc_blocked / too_many_recipients",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "broadcast"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"body\": \"<string>\",\n  \"recipients\": [\n    \"<string>\"\n  ],\n  \"name\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"from\": \"<string>\",\n  \"team\": \"電商\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "5c706898-19e1-4eee-ad65-ce20621295f2",
+              "name": "insufficient_balance",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "broadcast"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"body\": \"<string>\",\n  \"recipients\": [\n    \"<string>\"\n  ],\n  \"name\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"from\": \"<string>\",\n  \"team\": \"電商\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c01f2a8d-f428-4c36-b8e0-63503b7661fb",
+              "name": "rate_limited",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "broadcast"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"body\": \"<string>\",\n  \"recipients\": [\n    \"<string>\"\n  ],\n  \"name\": \"<string>\",\n  \"scheduled_at\": \"<dateTime>\",\n  \"from\": \"<string>\",\n  \"team\": \"電商\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1607f89a-0dcc-4a98-89e0-84eaefabb0f4",
+          "name": "List broadcasts with per-broadcast delivery stats",
+          "request": {
+            "name": "List broadcasts with per-broadcast delivery stats",
+            "description": {},
+            "url": {
+              "path": [
+                "broadcast"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "555b46e5-a2de-4f43-9193-ed455b1f8c46",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "broadcast"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": true,\n  \"broadcasts\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"recipient_count\": 1933,\n      \"cost_cents\": 4682,\n      \"status\": \"scheduled\",\n      \"delivered_count\": 8662,\n      \"failed_count\": 3803,\n      \"sent_count\": 8234,\n      \"created_at\": \"1989-08-11T22:48:56.923Z\",\n      \"scheduled_at\": \"1967-04-14T08:30:40.923Z\",\n      \"finished_at\": \"1952-08-15T11:13:38.258Z\"\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"recipient_count\": 2287,\n      \"cost_cents\": 9187,\n      \"status\": \"failed\",\n      \"delivered_count\": 9873,\n      \"failed_count\": 9831,\n      \"sent_count\": 3477,\n      \"created_at\": \"2013-11-18T22:30:03.352Z\",\n      \"scheduled_at\": \"1978-03-02T04:26:25.250Z\",\n      \"finished_at\": \"2010-08-22T10:22:19.242Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://sms.cresclab.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "4c74f623-1816-41e7-9e4c-156962373445",
+    "name": "MAAC Go Broadcast API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "MAAC Go — Taiwan-first self-serve SMS platform. Send transactional (OTP /\norder / reminder) and broadcast SMS with NCC compliance, MAAC delivery\nbackend, and real-time DLR webhooks.\n\n- Base URL: `https://sms.cresclab.com/api`\n- Auth: `Authorization: Bearer <sk_live_... or sk_test_...>`\n- New accounts receive NT$50 trial credit on signup, enough to send real test SMS immediately.\n- API keys are scoped and wallet-backed; sending debits the account balance unless your deployment uses a mock SMS/payment adapter.\n- All phone numbers use E.164 (`+886912345678`). 09xxxxxxxx is also accepted.\n- Cost: NT$0.78 per SMS segment (Chinese: 70 chars/segment · English: 160/segment).\n- Rate-limit errors return `429 rate_limited` with limit/used details and retry guidance when available.\n- Delivery confirmations arrive asynchronously via webhook (`sms.delivered`\n  / `sms.failed`); poll `GET /sms/{id}` as a fallback.\n- MCP clients (Claude / Cursor / Windsurf) can use this spec directly, or\n  connect via `POST /api/mcp` (JSON-RPC 2.0) with the same bearer key.\n\n\nContact Support:\n Name: MAAC Go Support\n Email: info@cresclab.com",
+      "type": "text/plain"
+    }
+  }
+}

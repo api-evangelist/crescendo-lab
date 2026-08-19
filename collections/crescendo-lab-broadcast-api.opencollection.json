@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MAAC Go Broadcast API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Broadcast",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List broadcasts with per-broadcast delivery stats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sms.cresclab.com/api/broadcast"
+          },
+          "docs": "List broadcasts with per-broadcast delivery stats"
+        },
+        {
+          "info": {
+            "name": "Create a broadcast (1-to-many)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sms.cresclab.com/api/broadcast",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "≤ 30 recipients dispatch inline and return 200 with `delivered` / `failed` counts.\n\\> 30 recipients queue async and return 202 with `status: \"queued\"`; cron dispatches in\nbatches of 40 every 5 min; DLR webhooks flip individual messages.\n\nSchedule for later by passing `scheduled_at` (ISO 8601); funds reserve immediately,\nactual charge happens at send time.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

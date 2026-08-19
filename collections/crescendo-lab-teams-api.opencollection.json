@@ -1,0 +1,68 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MAAC Go Broadcast Teams API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Teams",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List cost-attribution teams (+ lifetime usage)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sms.cresclab.com/api/teams"
+          },
+          "docs": "List cost-attribution teams (+ lifetime usage)"
+        },
+        {
+          "info": {
+            "name": "Create a team (idempotent on name; re-creates un-archive)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sms.cresclab.com/api/teams",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Teams are also auto-created on first use via `team` on `/sms/send` or `/broadcast`,\nso calling this explicitly is optional — handy for pre-seeding before you send.\n"
+        },
+        {
+          "info": {
+            "name": "Archive a team (soft-delete; history is retained)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://sms.cresclab.com/api/teams",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Archive a team (soft-delete; history is retained)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

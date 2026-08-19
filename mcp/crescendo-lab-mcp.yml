@@ -1,11 +1,13 @@
-generated: '2026-07-18'
-method: searched
-source: https://sms.cresclab.com/mcp.html + MCP Registry io.github.jinhsueh/maacgo-mcp
+generated: '2026-08-13'
+method: probed
+source: >-
+  https://sms.cresclab.com/mcp.html + https://sms.cresclab.com/install.html +
+  MCP Registry io.github.jinhsueh/maacgo-mcp + live JSON-RPC probe of
+  https://sms.cresclab.com/api/mcp
 name: MAAC Go MCP
-description: >-
-  Official hosted + local MCP server for MAAC Go (Crescendo Lab's self-serve
-  Taiwan SMS platform). Lets Claude / Cursor / Windsurf / Codex send SMS, run
-  broadcasts, pull logs, and check wallet balance over the MAAC Go REST API.
+description: Official hosted + local MCP server for MAAC Go (Crescendo Lab's self-serve Taiwan SMS platform).
+  Lets Claude / Cursor / Windsurf / Codex send SMS, run broadcasts, pull logs, and check wallet balance
+  over the MAAC Go REST API.
 status: published
 registry:
   id: io.github.jinhsueh/maacgo-mcp
@@ -17,7 +19,9 @@ package:
 auth:
   scheme: bearer
   env: MAACGO_API_KEY
-  key_prefixes: [sk_test_, sk_live_]
+  key_prefixes:
+  - sk_test_
+  - sk_live_
 transports:
 - type: stdio
   install: npx -y @maacgo/mcp
@@ -50,7 +54,54 @@ tools:
   description: View transaction history (top-ups, charges, refunds).
 - name: get_me
   description: Verify API key validity and account info.
-notes: >-
-  Scopes on the API key determine which tools succeed (a sms.read-only key
-  cannot call send_sms). On 402 insufficient_balance the response carries a
-  topup_url the wrapper surfaces to the user.
+notes: Scopes on the API key determine which tools succeed (a sms.read-only key cannot call send_sms).
+  On 402 insufficient_balance the response carries a topup_url the wrapper surfaces to the user.
+deployment:
+  mode: both
+  endpoint: https://sms.cresclab.com/api/mcp
+  install: npx -y @maacgo/mcp
+  package: https://www.npmjs.com/package/@maacgo/mcp
+  auth: api-key
+  verified: probed
+  tools: 9
+  checked: '2026-08-13'
+  source: >-
+    Live JSON-RPC 2.0 POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"} to
+    https://sms.cresclab.com/api/mcp returned HTTP 401 with
+    WWW-Authenticate: Bearer realm="maacgo-mcp", x-maacgo-api-key and body
+    {"jsonrpc":"2.0","id":null,"error":{"code":-32001,"message":"missing_bearer"}}.
+    A JSON-RPC-shaped auth challenge from the advertised endpoint confirms a
+    real remote MCP server is deployed there and is bearer-gated, not a 404 or
+    an HTML shell. The stdio package is separately published on npm and in the
+    official MCP Registry — hence mode "both".
+  upgraded_from: >-
+    local-stdio (2026-08-12 catalog census recorded only the npx package; the
+    hosted HTTP endpoint the provider advertises on mcp.html, install.html and
+    llms.txt had not been probed).
+tools_list_probe:
+  url: https://sms.cresclab.com/api/mcp
+  method: POST
+  http_status: 401
+  error_code: -32001
+  error_message: missing_bearer
+  www_authenticate: Bearer realm="maacgo-mcp", x-maacgo-api-key
+  checked: '2026-08-13'
+  note: >-
+    Tool inputSchemas require an authenticated tools/list. The 9 tool names and
+    descriptions below are the provider's own published list (mcp.html tool
+    table, install.html section 0, llms.txt), not a live introspection.
+alt_auth_header: x-maacgo-api-key
+registry_metadata:
+  schema: https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json
+  status: active
+  published_at: '2026-05-07'
+  transport: stdio
+  environment_variables:
+  - name: MAACGO_API_KEY
+    required: true
+    secret: true
+    description: MAAC Go API key from https://sms.cresclab.com/app.html#transactional
+  - name: MAACGO_BASE_URL
+    required: false
+    description: Override the REST base URL (default https://sms.cresclab.com/api); staging / self-host only.
+crosswalk: mcp/crescendo-lab-tool-crosswalk.yml

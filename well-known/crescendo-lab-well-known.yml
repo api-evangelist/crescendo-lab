@@ -1,7 +1,18 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: probed
 source: live probes of cresclab.com + sms.cresclab.com
-summary: No /.well-known/ documents published on either host as of this probe.
+summary: >-
+  No /.well-known/ documents are published on either host. Every path probed on
+  both hosts returned HTTP 404. This is a recorded ABSENCE, not a presence — no
+  WellKnown, SecurityTxt, APICatalog or AgentCard pointer is wired in apis.yml
+  on the strength of this file.
+note: >-
+  Both hosts answer 404 with an HTML error body (88 bytes on cresclab.com, 4,716
+  bytes on sms.cresclab.com), so there is no SPA catch-all returning a soft 200
+  here — the 404s are genuine. Discovery on this provider happens through
+  /llms.txt, /openapi.yaml and /sitemap.xml instead, all of which are served and
+  are captured as their own artifacts.
+documents_found: 0
 probes:
 - host: cresclab.com
   path: /.well-known/security.txt
@@ -13,15 +24,60 @@ probes:
   path: /.well-known/oauth-authorization-server
   status: 404
 - host: cresclab.com
+  path: /.well-known/oauth-protected-resource
+  status: 404
+- host: cresclab.com
   path: /.well-known/api-catalog
   status: 404
 - host: cresclab.com
   path: /.well-known/ai-plugin.json
   status: 404
+- host: cresclab.com
+  path: /.well-known/mcp.json
+  status: 404
+- host: cresclab.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: cresclab.com
+  path: /.well-known/agent.json
+  status: 404
 - host: sms.cresclab.com
   path: /.well-known/security.txt
   status: 404
 - host: sms.cresclab.com
+  path: /.well-known/openid-configuration
+  status: 404
+- host: sms.cresclab.com
+  path: /.well-known/oauth-authorization-server
+  status: 404
+- host: sms.cresclab.com
+  path: /.well-known/oauth-protected-resource
+  status: 404
+- host: sms.cresclab.com
+  path: /.well-known/api-catalog
+  status: 404
+- host: sms.cresclab.com
   path: /.well-known/ai-plugin.json
   status: 404
+- host: sms.cresclab.com
+  path: /.well-known/mcp.json
+  status: 404
+- host: sms.cresclab.com
+  path: /.well-known/agent-card.json
+  status: 404
+- host: sms.cresclab.com
+  path: /.well-known/agent.json
+  status: 404
 files: []
+adjacent_discovery_served:
+- url: https://sms.cresclab.com/llms.txt
+  status: 200
+  artifact: llms/crescendo-lab-llms.txt
+- url: https://sms.cresclab.com/openapi.yaml
+  status: 200
+  artifact: openapi/_original/crescendo-lab-maacgo-openapi.yaml
+- url: https://sms.cresclab.com/sitemap.xml
+  status: 200
+- url: https://sms.cresclab.com/robots.txt
+  status: 200
+  note: Explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot and 10 other AI crawlers; disallows /api/ and the authenticated app paths.

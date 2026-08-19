@@ -1,15 +1,35 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: generated
-source: openapi/crescendo-lab-maacgo-openapi.yaml
+source: openapi/ (4 refined specs, 12 operations) + openapi/_original/crescendo-lab-maacgo-openapi.yaml
 api: MAAC Go API
 note: >-
-  Packaged Agent Skills generated from real MAAC Go operationIds. MAAC Go also
-  ships an official MCP server (@maacgo/mcp) whose tools map 1:1 to these
-  operations — see mcp/crescendo-lab-mcp.yml.
+  Packaged Agent Skills generated from real MAAC Go operationIds — every
+  operation named below is verified present in the referenced spec. MAAC Go also
+  ships an official MCP server (@maacgo/mcp, plus a hosted endpoint at
+  https://sms.cresclab.com/api/mcp) whose 9 tools cover the messaging and
+  observability half of the API — see mcp/crescendo-lab-mcp.yml. The Contacts
+  and Teams skills deliberately cover the REST-only half that no MCP tool
+  reaches (see mcp/crescendo-lab-tool-crosswalk.yml).
 skills:
 - name: send-transactional-sms
   file: crescendo-lab-send-sms.md
   operations: [sendSms, getSms]
+  spec: openapi/crescendo-lab-sms-api-openapi.yml
+  mcp_covered: true
 - name: send-broadcast-campaign
   file: crescendo-lab-broadcast.md
   operations: [createBroadcast, listBroadcasts, getMetrics]
+  spec: openapi/crescendo-lab-broadcast-api-openapi.yml
+  mcp_covered: true
+- name: manage-contacts
+  file: crescendo-lab-manage-contacts.md
+  operations: [createContact, listContacts, createBroadcast]
+  spec: openapi/crescendo-lab-contacts-api-openapi.yml
+  mcp_covered: false
+  note: Consent-tracked address book; REST-only, no MCP tool exists.
+- name: attribute-sms-cost-by-team
+  file: crescendo-lab-team-cost-attribution.md
+  operations: [createTeam, listTeams, smsByTeam, getMetrics, deleteTeam]
+  spec: openapi/crescendo-lab-teams-api-openapi.yml
+  mcp_covered: false
+  note: Cost attribution against a shared wallet; REST-only, no MCP tool exists.

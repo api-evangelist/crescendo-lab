@@ -1,6 +1,8 @@
-generated: '2026-07-18'
-method: derived
-source: openapi/crescendo-lab-maacgo-openapi.yaml + https://sms.cresclab.com/developers.html
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://sms.cresclab.com/install.html (Q5/Q6 error reference) +
+  https://sms.cresclab.com/mcp.html + openapi/_original/crescendo-lab-maacgo-openapi.yaml
 format: custom-json
 media_type: application/json
 envelope:
@@ -44,3 +46,50 @@ problem_types:
   title: Rate limit exceeded
   detail: Too many requests. Body carries limit/used; retry_after header when available.
   remediation: Back off per retry_after.
+
+ncc_issue_codes:
+  note: >-
+    The `issues[]` array attached to a 400 ncc_blocked response carries these
+    codes. Published as a code/meaning/fix table in the install manual
+    troubleshooting section (Q6). Taiwan NCC rules are enforced server-side and
+    the provider states explicitly that they cannot be bypassed.
+  source: https://sms.cresclab.com/install.html
+  envelope_field: issues
+  issue_shape: '{ level: block|warn, code, reason }'
+  codes:
+  - code: NO_SIGNATURE
+    meaning: Message body does not open with a 【brand】 signature block.
+    remediation: Prefix the body with a 4-8 character 【brand】 signature, e.g. 【MAAC Go】.
+    constraint: signature must be 4-8 characters — 【MAAC】 is too short, a longer brand name is rejected
+  - code: URL_SHORTENER
+    meaning: Message contains a blocklisted URL shortening service.
+    remediation: Use a full URL on an allowlisted domain.
+    blocklist: [bit.ly, reurl.cc, lihi.cc, pse.is, tinyurl, ppt.cc, goo.gl, is.gd, fb.me, t.co, buff.ly]
+  - code: PHISHING_KEYWORD
+    meaning: Message contains a keyword common to Taiwanese SMS phishing campaigns.
+    remediation: Rewrite the copy without the flagged term.
+    examples: [中獎, 立即領取, 恭喜您, 提領, 帳號異常, 解除設定, 代收, 代付, 點擊連結]
+  - code: MISSING_OPT_OUT
+    meaning: A marketing-class message carries no opt-out instruction.
+    remediation: Add "STOP" or "退訂" to marketing-type message bodies.
+error_recovery_contract:
+  note: >-
+    MAAC Go publishes an explicit agent recovery path for the billing error,
+    which is unusual and worth recording as a contract rather than a code.
+  code: insufficient_balance
+  http_status: 402
+  response_fields: [error, balance_cents, required_cents, topup_url, topup_amount_ntd]
+  agent_instruction: >-
+    Documented in llms.txt and mcp.html: surface/open the returned topup_url,
+    wait for the user to confirm the top-up, then retry the send. Do not retry
+    blindly. The MCP wrapper reformats the 402 into a human-readable prompt
+    carrying the link with the amount pre-filled.
+  source: https://sms.cresclab.com/mcp.html
+auth_errors:
+  - code: 401 unauthorized / 403 forbidden
+    cause: API key rotated, revoked, or absent.
+    remediation: Reissue a key in the dashboard (MCP / API section) and re-register it with the client.
+    source: https://sms.cresclab.com/install.html
+cross_links:
+  rate_limits: rate-limits/crescendo-lab-rate-limits.yml
+  conventions: conventions/crescendo-lab-conventions.yml

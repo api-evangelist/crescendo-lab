@@ -1,0 +1,135 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MAAC Go Broadcast SMS API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "SMS",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Send a transactional SMS (1-to-1)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://sms.cresclab.com/api/sms/send",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "OTP, order notifications, appointment reminders. High-priority channel,\nno LINE fallback. Returns after MAAC accepts the request; final delivery\nstatus arrives via the `sms.delivered` / `sms.failed` webhook.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve SMS status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sms.cresclab.com/api/sms/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "sms_abc123",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Poll once per 5+ seconds as a fallback; prefer the `sms.delivered` webhook."
+        },
+        {
+          "info": {
+            "name": "List recent messages (Resend-style delivery log)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sms.cresclab.com/api/sms/list",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "team",
+                "value": "付費會員",
+                "type": "query",
+                "description": "Filter to one cost-attribution team. Use the literal `(未分類)` for untagged messages."
+              }
+            ]
+          },
+          "docs": "List recent messages (Resend-style delivery log)"
+        },
+        {
+          "info": {
+            "name": "Cost attribution per team (messages / cost / delivered / failed)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sms.cresclab.com/api/sms/by-team",
+            "params": [
+              {
+                "name": "days",
+                "value": "",
+                "type": "query",
+                "description": "Rolling window in days (ignored if from/to given)."
+              },
+              {
+                "name": "from",
+                "value": "2026-06-01",
+                "type": "query",
+                "description": "Start of an exact range (ISO date/datetime, inclusive)."
+              },
+              {
+                "name": "to",
+                "value": "2026-07-01",
+                "type": "query",
+                "description": "End of an exact range (ISO date/datetime, exclusive)."
+              }
+            ]
+          },
+          "docs": "Returns one row per team plus `(未分類)` for untagged sends, so the rows sum to the\naccount total. Money is shared (one wallet, one invoice per 統編); this is a reporting\nbreakdown for internal chargeback, **not** a wallet split.\n\nWindowing: pass `from`/`to` for an exact billing period (monthly chargeback), or `days`\nfor a rolling window. `from`/`to` take precedence when supplied.\n"
+        },
+        {
+          "info": {
+            "name": "Daily volume + delivery metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://sms.cresclab.com/api/sms/metrics",
+            "params": [
+              {
+                "name": "days",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Daily volume + delivery metrics"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

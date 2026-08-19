@@ -1,0 +1,154 @@
+generated: '2026-08-13'
+method: searched
+source: https://sms.cresclab.com/developers.html + https://sms.cresclab.com/llms.txt + https://cresclab.com/pricing
+note: >-
+  Crescendo Lab publishes two distinct commercial surfaces and they price very
+  differently. MAAC Go (sms.cresclab.com) — the developer-facing self-serve SMS
+  product this repo's OpenAPI describes — publishes a real, numeric,
+  usage-based price with no monthly fee. The enterprise platform
+  (cresclab.com/pricing — MAAC / CAAC / DAAC) publishes four NAMED tiers with a
+  stated billing unit but NO numeric price on any tier: every tier ends in a
+  "contact a consultant" call to action. Both are recorded below; the numeric
+  plan_count counts only tiers that are actually purchasable as published.
+plan_count: 6
+currency: TWD
+surfaces:
+- name: MAAC Go (self-serve SMS API)
+  url: https://sms.cresclab.com/developers.html
+  model: pay-as-you-go, prepaid wallet
+  self_serve: true
+  monthly_fee: 0
+  card_required_to_start: false
+- name: Crescendo Lab platform (MAAC / CAAC / DAAC)
+  url: https://cresclab.com/pricing
+  model: subscription, priced on monthly active contacts
+  self_serve: false
+  sales_gated: true
+plans:
+- name: MAAC Go Free Trial
+  surface: MAAC Go
+  price: 0
+  currency: TWD
+  billing_period: one-time
+  included_quota: 50 SMS (NT$39 trial credit, one-time, granted on signup)
+  overage: NT$0.78 per SMS segment once trial credit is spent
+  limits:
+    rate_limit: new accounts (<24h) capped per rate-limits/crescendo-lab-rate-limits.yml
+  notes: No credit card required. Signup at https://sms.cresclab.com/signup.html
+  source: https://sms.cresclab.com/llms.txt
+- name: MAAC Go Pay-as-you-go
+  surface: MAAC Go
+  price: 0.78
+  currency: TWD
+  billing_period: per-unit
+  unit: SMS segment
+  segmentation: 70 characters/segment (Chinese) · 160 characters/segment (English)
+  included_quota: none — prepaid wallet, debited per successful send
+  overage: n/a (prepaid)
+  refunds: carrier-level permanent failures auto-refund the wallet
+  limits:
+    rate_limit: established accounts (>=24h) capped per rate-limits/crescendo-lab-rate-limits.yml
+  notes: >-
+    No monthly fee. Wallet top-up via Stripe / domestic TWD card. On a send that
+    exceeds the balance the API returns HTTP 402 insufficient_balance with a
+    topup_url.
+  source: https://sms.cresclab.com/developers.html
+- name: MAAC Go Volume (negotiated)
+  surface: MAAC Go
+  price: null
+  currency: TWD
+  billing_period: negotiated
+  threshold: monthly volume > 50,000 messages
+  included_quota: negotiated
+  notes: Published on the developer pricing block as "議價 · 月量 > 50k" (negotiated pricing above 50k/month).
+  source: https://sms.cresclab.com/developers.html
+- name: Growth 成長方案
+  surface: Crescendo Lab platform
+  price: null
+  currency: TWD
+  billing_period: subscription
+  price_published: false
+  audience: Early-stage brands wanting entry-level omnichannel + AI automation.
+  included_features:
+  - Omnichannel message sending (LINE / Email / SMS)
+  - Basic segmentation and automated journeys
+  - MAAC AI marketing automation
+  - CAAC AI conversational engagement
+  notes: No numeric price published; tier CTA is a sales contact.
+  source: https://cresclab.com/pricing
+- name: Scale 擴張方案
+  surface: Crescendo Lab platform
+  price: null
+  currency: TWD
+  billing_period: subscription
+  price_published: false
+  audience: Scaling brands needing deeper automation and website analytics.
+  included_features:
+  - Everything in Growth, with raised quotas
+  - Advanced segmentation and automated journeys
+  - GA4 website data integration
+  - Deep customer-data management
+  notes: No numeric price published; tier CTA is a sales contact.
+  source: https://cresclab.com/pricing
+- name: Professional 專業方案
+  surface: Crescendo Lab platform
+  price: null
+  currency: TWD
+  billing_period: subscription
+  price_published: false
+  audience: Mature ecommerce/brand teams needing full data integration and revenue attribution.
+  included_features:
+  - Everything in Scale, with raised quotas
+  - Ecommerce platform + product catalog integration
+  - Online revenue attribution reporting
+  - Deep AI x data x channel integration
+  notes: Marked "最受歡迎" (most popular). No numeric price published.
+  source: https://cresclab.com/pricing
+- name: Enterprise 企業方案
+  surface: Crescendo Lab platform
+  price: null
+  currency: TWD
+  billing_period: subscription
+  price_published: false
+  audience: Brand groups, multinationals, large operations teams.
+  included_features:
+  - Everything in Professional, with raised quotas
+  - Dedicated consultant and priority support
+  - Cross-team / cross-brand / cross-market governance
+  - Enterprise security and compliance
+  notes: No numeric price published; tier CTA is a sales contact.
+  source: https://cresclab.com/pricing
+- name: Custom Pricing
+  surface: Crescendo Lab platform
+  price: null
+  currency: TWD
+  billing_period: negotiated
+  price_published: false
+  notes: >-
+    Bespoke quote for groups with specific integration, compliance, spend-cap or
+    rollout requirements. Contract options include a hard spend ceiling.
+  source: https://cresclab.com/pricing
+billing_model:
+  platform:
+    unit: monthly active contacts (月活躍聯絡人)
+    definition: >-
+      Unique contacts that actively interacted with the brand within a rolling
+      30 days (opened a message, clicked, conversed, browsed the site).
+      Blocked, dormant, and merely-imported-but-never-engaged contacts are NOT
+      billed; contact storage itself is unlimited and free.
+    smoothing: Quarterly smoothed billing to avoid single-month spikes; usage monitored with proactive alerts.
+    spend_cap: Available to enterprise customers by contract.
+    credits: >-
+      Message pushes, automated journeys and API sends draw down account credits;
+      balance, alerts and usage caps are visible in-product.
+    changed_from: previously billed on LINE valid friends (LINE 有效好友)
+  maac_go:
+    unit: SMS segment
+    prepaid: true
+    ledger: wallet_events transaction log (top-ups, charges, refunds)
+    atomic_debit: Wallet is debited only on successful send; carrier failure auto-refunds.
+plans_note: >-
+  plan_count 6 counts the four named platform tiers plus the two purchasable
+  MAAC Go plans (Free Trial, Pay-as-you-go). The two negotiated entries (MAAC Go
+  Volume, Custom Pricing) are quote-only and are listed but not counted as
+  published plans.

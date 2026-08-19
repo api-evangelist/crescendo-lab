@@ -1,9 +1,11 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
-source: https://www.npmjs.com/package/maacgo + https://sms.cresclab.com/developers.html
+source: https://registry.npmjs.org/maacgo + https://sms.cresclab.com/developers.html
 name: maacgo
 description: MAAC Go CLI — send Taiwan SMS from your terminal (NCC-compliant). Pairs with @maacgo/mcp for AI agents.
 version: 0.1.0
+published: '2026-05-07'
+status: beta
 license: MIT
 binary: maacgo
 package: packages/crescendo-lab-packages.yml
@@ -15,8 +17,34 @@ auth:
   key_prefixes: [sk_test_, sk_live_]
 surface:
   note: >-
-    Wraps the MAAC Go REST API (base https://sms.cresclab.com/api). Command
-    groups mirror the API resources — send single/broadcast SMS, list message
-    logs, and check wallet balance — from the terminal.
+    Wraps the MAAC Go REST API (base https://sms.cresclab.com/api). The full
+    command list is published on developers.html as
+    "send · broadcast · logs · tail · balance · metrics · whoami".
   resources: [sms, broadcast, wallet]
+  commands:
+  - name: send
+    usage: maacgo send +886912345678 "【demo】deploy succeeded"
+    note: Single transactional send. Prints delivery status, segment count and NT$ cost.
+  - name: broadcast
+    note: One-to-many send with {{var}} personalization.
+  - name: logs
+    note: List recent messages.
+  - name: tail
+    usage: maacgo tail
+    note: Live-stream outgoing messages until Ctrl-C. The flow the docs single out for debugging.
+  - name: balance
+    note: Prepaid wallet balance.
+  - name: metrics
+    usage: maacgo metrics --days 30 --json | jq '.totals'
+    note: Aggregate stats for billing reconciliation; --json makes it pipeable.
+  - name: whoami
+    note: Verify the API key and show the current account.
+  flows:
+  - Send an SMS from a CI/CD pipeline on deploy or alert.
+  - Live-tail outgoing traffic while debugging an integration.
+  - Reconcile billing by piping metrics --json into jq.
+install_caveat: >-
+  developers.html publishes the install as `npm i -g ./sdk/cli` — a relative path
+  into the (private) source repo, not the registry name. The package is published
+  on npm as `maacgo`, so `npm install -g maacgo` is the working command.
 source: https://github.com/jinhsueh/cresclab-sms-self-serve

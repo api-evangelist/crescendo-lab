@@ -1,6 +1,8 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
-source: https://sms.cresclab.com/developers.html + openapi/crescendo-lab-maacgo-openapi.yaml
+source: >-
+  https://sms.cresclab.com/developers.html + https://sms.cresclab.com/install.html
+  + https://sms.cresclab.com/llms.txt + openapi/_original/crescendo-lab-maacgo-openapi.yaml
 api: MAAC Go API
 base_url: https://sms.cresclab.com/api
 auth:
@@ -31,8 +33,33 @@ error_envelope:
 rate_limits:
   signaled_via: HTTP 429
   body_error: rate_limited
-  headers: retry_after (when available); response body carries limit/used details
-  policy: New accounts 200 msgs/24h; established accounts ~1000/hr
+  headers: >-
+    retry_after documented (lowercase, per developers.html) but not declared in
+    the OpenAPI; no RateLimit-*/X-RateLimit-* headers are published, so remaining
+    quota is not readable before exhaustion.
+  policy: >-
+    Account-age tiered. New accounts (<24h) are capped in a 24h window;
+    established accounts are capped at 1,000/hour. The two published pages give
+    different new-account numbers (200 on developers.html, 2,000 on
+    install.html) — see rate-limits/crescendo-lab-rate-limits.yml.
+  detail: See rate-limits/crescendo-lab-rate-limits.yml
+retry_safety:
+  note: >-
+    Read this alongside the idempotency block. The idempotent behaviour MAAC Go
+    documents is resource-natural and covers Teams and Contacts only. The
+    money-spending operations are NOT retry-safe.
+  safe_to_retry:
+  - createTeam  # idempotent on name; re-creating an archived team un-archives it
+  - createContact  # dedupes within the batch and skips existing (user_id, phone) pairs
+  - all GET operations
+  not_safe_to_retry:
+  - sendSms  # no Idempotency-Key header; a blind retry sends and bills a second message
+  - createBroadcast  # same — a retried broadcast re-sends to every recipient
+  guidance: >-
+    An agent must not auto-retry sendSms or createBroadcast on a timeout or an
+    ambiguous response. Reconcile first with getSms / listSms (or listBroadcasts)
+    before re-issuing. On 402 insufficient_balance the provider's own published
+    instruction is to retry only after the user confirms a top-up.
 versioning:
   scheme: info.version in OpenAPI (1.0.0); no URL/date version segment
 webhooks:
@@ -53,3 +80,37 @@ cross_links:
   errors: errors/crescendo-lab-problem-types.yml
   lifecycle: lifecycle/crescendo-lab-lifecycle.yml
   authentication: authentication/crescendo-lab-authentication.yml
+  rate_limits: rate-limits/crescendo-lab-rate-limits.yml
+  plans: plans/crescendo-lab-plans-pricing.yml
+  mcp: mcp/crescendo-lab-mcp.yml
+  tool_crosswalk: mcp/crescendo-lab-tool-crosswalk.yml
+
+agent_posture:
+  note: >-
+    MAAC Go is built agent-first and publishes an explicit routing contract, which
+    is rare enough to record as a convention rather than as marketing copy.
+  llms_txt: https://sms.cresclab.com/llms.txt
+  routing_instruction: >-
+    llms.txt carries an "Agent Routing Instruction" telling Codex / Claude /
+    Cursor / Windsurf to prefer the maacgo MCP server for SMS, OTP, reminder and
+    broadcast intents, with a numbered preferred-action order and an explicit
+    failure-recovery path for insufficient_balance and NCC blocks.
+  mcp_first: true
+  codex_skill: skills/maacgo-sms/SKILL.md (published on https://sms.cresclab.com/codex.html)
+  scope_enforcement: >-
+    API-key scopes decide which MCP tools succeed — an sms.read-only key cannot
+    call send_sms. Scope failure surfaces as an auth error, not a tool-not-found.
+  crawler_policy:
+    source: https://sms.cresclab.com/robots.txt
+    stance: AI crawlers explicitly welcomed
+    allowed: [GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-Web, Claude-SearchBot, PerplexityBot, Perplexity-User, Google-Extended, Applebot-Extended, Amazonbot, CCBot, Bytespider, Meta-ExternalAgent]
+    disallowed_paths: [/api/, /app.html, /admin.html, /admin-login.html, /digest.html, /logout.html, /cli-link.html]
+    note: >-
+      The /api/ disallow means the callable surface is out of crawler scope by
+      policy; discovery is intended to run through llms.txt and openapi.yaml.
+  discovery_surfaces:
+  - https://sms.cresclab.com/llms.txt
+  - https://sms.cresclab.com/openapi.yaml
+  - https://sms.cresclab.com/sitemap.xml
+  - https://sms.cresclab.com/mcp.html
+  - https://sms.cresclab.com/codex.html

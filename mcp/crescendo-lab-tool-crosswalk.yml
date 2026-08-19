@@ -1,0 +1,159 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  mcp/crescendo-lab-mcp.yml + https://sms.cresclab.com/mcp.html +
+  https://sms.cresclab.com/install.html + openapi/ (4 refined specs, 12
+  operations) + openapi/_original/crescendo-lab-maacgo-openapi.yaml
+api: MAAC Go
+note: >-
+  MAAC Go publishes 9 MCP tools and 12 OpenAPI operations. The two surfaces are
+  overlapping but NOT identical: two tools (wallet_balance, wallet_events) and
+  one identity tool (get_me) back onto REST endpoints that the provider
+  documents on developers.html but does NOT declare in the published OpenAPI, so
+  those tools have no operationId to inherit an inputSchema from. Conversely
+  five REST operations (Teams and Contacts) have no MCP tool at all. Bindings
+  were mapped by name and by the tool descriptions the provider publishes on
+  mcp.html and install.html; the live tools/list schema is auth-gated (see
+  surfaces.mcp) so no tool inputSchema was read directly.
+surfaces:
+  openapi:
+    files:
+    - openapi/crescendo-lab-sms-api-openapi.yml
+    - openapi/crescendo-lab-broadcast-api-openapi.yml
+    - openapi/crescendo-lab-contacts-api-openapi.yml
+    - openapi/crescendo-lab-teams-api-openapi.yml
+    original: openapi/_original/crescendo-lab-maacgo-openapi.yaml
+    source_url: https://sms.cresclab.com/openapi.yaml
+    operations: 12
+    gated: false
+  mcp:
+    remote_endpoint: https://sms.cresclab.com/api/mcp
+    local_install: npx -y @maacgo/mcp
+    tools_published: 9
+    gated: true
+    gate_evidence: >-
+      POST tools/list (JSON-RPC 2.0, anonymous) returned HTTP 401
+      {"error":{"code":-32001,"message":"missing_bearer"}} with
+      WWW-Authenticate: Bearer realm="maacgo-mcp", x-maacgo-api-key. Tool names
+      and descriptions come from the provider's own mcp.html / install.html /
+      llms.txt; inputSchemas require authenticated introspection.
+  graphql:
+    present: false
+crosswalk:
+- tool: send_sms
+  category: messaging
+  rest: [sendSms]
+  binding: rest
+  confidence: high
+  spec: openapi/crescendo-lab-sms-api-openapi.yml
+  note: 1-to-1 transactional send. Inherits POST /sms/send requestBody (to, body, type, team).
+- tool: send_broadcast
+  category: messaging
+  rest: [createBroadcast]
+  binding: rest
+  confidence: high
+  spec: openapi/crescendo-lab-broadcast-api-openapi.yml
+  note: >-
+    1-to-many with {{var}} personalization. Inherits POST /broadcast
+    requestBody; recipients accept either a bare phone array or objects with a
+    per-recipient vars map.
+- tool: list_sms
+  category: observability
+  rest: [listSms]
+  binding: rest
+  confidence: high
+  spec: openapi/crescendo-lab-sms-api-openapi.yml
+  note: Inherits GET /sms/list query params (limit max 200, status, team).
+- tool: get_sms
+  category: observability
+  rest: [getSms]
+  binding: rest
+  confidence: high
+  spec: openapi/crescendo-lab-sms-api-openapi.yml
+  note: Inherits GET /sms/{id} path param. Documented fallback for a missed webhook.
+- tool: list_broadcasts
+  category: observability
+  rest: [listBroadcasts]
+  binding: rest
+  confidence: high
+  spec: openapi/crescendo-lab-broadcast-api-openapi.yml
+  note: Broadcast history plus per-campaign delivery rate.
+- tool: sms_metrics
+  category: analytics
+  rest: [getMetrics]
+  binding: rest
+  confidence: high
+  spec: openapi/crescendo-lab-sms-api-openapi.yml
+  note: >-
+    Tool name (sms_metrics) differs from the operationId (getMetrics); mapped on
+    the published description "過去 N 天的 aggregate" against GET /sms/metrics?days=N.
+- tool: wallet_balance
+  category: billing
+  rest: []
+  binding: undocumented-rest
+  confidence: medium
+  note: >-
+    developers.html lists GET /api/wallet/balance in its API-surface panel, but
+    no wallet path appears in the published OpenAPI, so there is no operationId
+    and no machine-readable schema to inherit.
+- tool: wallet_events
+  category: billing
+  rest: []
+  binding: undocumented-rest
+  confidence: medium
+  note: >-
+    developers.html lists GET /api/wallet/events (the transaction ledger —
+    top-ups, charges, refunds). Absent from the published OpenAPI.
+- tool: get_me
+  category: identity
+  rest: []
+  binding: undocumented-rest
+  confidence: low
+  note: >-
+    Verifies API key validity and returns the current account. No corresponding
+    path is published in the OpenAPI and none is named on developers.html; the
+    tool is documented only in the MCP tool tables.
+mcp_only:
+- tool: wallet_balance
+  reason: >-
+    Wallet endpoints are documented in prose on developers.html but are not
+    declared in the published OpenAPI — the MCP surface exposes billing state
+    that the machine-readable contract does not.
+- tool: wallet_events
+  reason: Same as wallet_balance — ledger access exists only via prose docs and the MCP tool.
+- tool: get_me
+  reason: >-
+    Key-introspection / whoami. No published REST operation anywhere in the
+    OpenAPI or the developer docs endpoint list.
+rest_only:
+- capability: Teams (cost attribution)
+  operations: [listTeams, createTeam, deleteTeam]
+  spec: openapi/crescendo-lab-teams-api-openapi.yml
+  note: >-
+    Teams tag sends for per-team cost reporting against a shared wallet. No MCP
+    tool creates, lists or deletes a team; an agent can only tag a send via the
+    `team` field on send_sms / send_broadcast, which auto-creates the team.
+- capability: Contacts (address book with NCC consent tracking)
+  operations: [listContacts, createContact]
+  spec: openapi/crescendo-lab-contacts-api-openapi.yml
+  note: >-
+    The consent-tracking address book is REST-only. An agent using MCP must
+    carry its own recipient list into send_broadcast; it cannot read or write
+    the provider-side contact book or its consent state.
+- capability: Per-team message log
+  operations: [smsByTeam]
+  spec: openapi/crescendo-lab-sms-api-openapi.yml
+  note: GET /sms/by-team has no MCP equivalent; sms_metrics is the nearest aggregate.
+coverage:
+  tools_named: 9
+  tools_bound_to_operation: 6
+  tools_mcp_only: 3
+  rest_operations_total: 12
+  rest_operations_with_tool: 6
+  rest_operations_without_tool: 6
+  binding_rate_tools: 0.67
+  binding_rate_operations: 0.50
+gaps_for_provider:
+  - Publish the wallet endpoints (GET /wallet/balance, GET /wallet/events) in the OpenAPI so wallet_balance and wallet_events inherit a real inputSchema.
+  - Publish the key-introspection endpoint backing get_me.
+  - Contacts and Teams are callable over REST but invisible to an agent; adding tools would close half the operation surface.

@@ -1,0 +1,801 @@
+{
+  "item": [
+    {
+      "id": "9f889447-a3d1-4b20-81c6-eddf602d30c3",
+      "name": "SMS",
+      "description": {
+        "content": "Transactional (1-to-1) SMS send + status.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9b1c40da-fa1c-4937-ae88-5bf417c82915",
+          "name": "Send a transactional SMS (1-to-1)",
+          "request": {
+            "name": "Send a transactional SMS (1-to-1)",
+            "description": {
+              "content": "OTP, order notifications, appointment reminders. High-priority channel,\nno LINE fallback. Returns after MAAC accepts the request; final delivery\nstatus arrives via the `sms.delivered` / `sms.failed` webhook.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "sms",
+                "send"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to\": \"<string>\",\n  \"body\": \"<string>\",\n  \"from\": \"<string>\",\n  \"type\": \"<string>\",\n  \"team\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c87dd032-f1ea-4234-a7e0-a76c74bd7bb3",
+              "name": "Queued for delivery",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "send"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": \"+886912345678\",\n  \"body\": \"【YourBrand】驗證碼 483291，5 分鐘內有效。勿告知他人。\",\n  \"type\": \"otp\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": true,\n  \"message_id\": \"sms_abc123\",\n  \"status\": \"failed\",\n  \"segments\": 8786,\n  \"cost_cents\": 5106,\n  \"balance_cents\": 1115,\n  \"team\": \"string\",\n  \"team_created\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c917e706-968d-4208-9637-4da898af48d2",
+              "name": "Validation or NCC compliance failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "send"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": \"+886912345678\",\n  \"body\": \"【YourBrand】驗證碼 483291，5 分鐘內有效。勿告知他人。\",\n  \"type\": \"otp\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"ncc_blocked\",\n  \"issues\": [\n    {\n      \"level\": \"block\",\n      \"code\": \"SHORTENER\",\n      \"reason\": \"bit.ly is on NCC 2024/11 blocklist\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1da15053-af75-4518-97d5-0da4f09d149d",
+              "name": "Auth missing / invalid",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "send"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": \"+886912345678\",\n  \"body\": \"【YourBrand】驗證碼 483291，5 分鐘內有效。勿告知他人。\",\n  \"type\": \"otp\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"ncc_blocked\",\n  \"hint\": \"string\",\n  \"issues\": [\n    {\n      \"level\": \"warn\",\n      \"code\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"level\": \"block\",\n      \"code\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "52f4f248-4479-418c-95fc-cb09240c9b70",
+              "name": "Wallet balance insufficient",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "send"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": \"+886912345678\",\n  \"body\": \"【YourBrand】驗證碼 483291，5 分鐘內有效。勿告知他人。\",\n  \"type\": \"otp\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"ncc_blocked\",\n  \"hint\": \"string\",\n  \"issues\": [\n    {\n      \"level\": \"block\",\n      \"code\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"level\": \"block\",\n      \"code\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38b8eb83-6765-4f3c-a212-e364a1dabd7e",
+              "name": "Rate limit exceeded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "send"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"to\": \"+886912345678\",\n  \"body\": \"【YourBrand】驗證碼 483291，5 分鐘內有效。勿告知他人。\",\n  \"type\": \"otp\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"ncc_blocked\",\n  \"hint\": \"string\",\n  \"issues\": [\n    {\n      \"level\": \"block\",\n      \"code\": \"string\",\n      \"reason\": \"string\"\n    },\n    {\n      \"level\": \"block\",\n      \"code\": \"string\",\n      \"reason\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "46e2b371-9778-4a13-b44a-f7ea974d6f1f",
+          "name": "Retrieve SMS status",
+          "request": {
+            "name": "Retrieve SMS status",
+            "description": {
+              "content": "Poll once per 5+ seconds as a fallback; prefer the `sms.delivered` webhook.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "sms",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d4e1f126-7c4c-48cd-985c-05170120ddbb",
+              "name": "Current message state",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"to\": \"string\",\n  \"body\": \"string\",\n  \"status\": \"stop\",\n  \"segments\": 7862,\n  \"cost_cents\": 4759,\n  \"sent_at\": \"2010-09-14T17:10:24.654Z\",\n  \"delivered_at\": \"1980-06-03T15:40:12.698Z\",\n  \"error\": \"string\",\n  \"gateway_ref\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "407ba89c-f3ae-4526-9e8e-08d6422ed857",
+              "name": "Not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2af25f5a-1a46-4459-97ae-f65a4f35731f",
+          "name": "List recent messages (Resend-style delivery log)",
+          "request": {
+            "name": "List recent messages (Resend-style delivery log)",
+            "description": {},
+            "url": {
+              "path": [
+                "sms",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "team",
+                  "value": "<string>",
+                  "description": "Filter to one cost-attribution team. Use the literal `(未分類)` for untagged messages."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d4f3b4e2-e8a1-44bf-9c9d-a78683dfadaf",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "50"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "team",
+                      "value": "付費會員"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": true,\n  \"messages\": [\n    {\n      \"id\": \"string\",\n      \"to\": \"string\",\n      \"body\": \"string\",\n      \"status\": \"delivered\",\n      \"segments\": 8114,\n      \"cost_cents\": 1530,\n      \"sent_at\": \"1971-04-11T05:20:21.796Z\",\n      \"delivered_at\": \"1955-06-05T02:54:47.514Z\",\n      \"error\": \"string\",\n      \"gateway_ref\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"to\": \"string\",\n      \"body\": \"string\",\n      \"status\": \"delivered\",\n      \"segments\": 4352,\n      \"cost_cents\": 7366,\n      \"sent_at\": \"2000-07-17T08:34:13.132Z\",\n      \"delivered_at\": \"2016-09-03T03:04:17.714Z\",\n      \"error\": \"string\",\n      \"gateway_ref\": \"string\"\n    }\n  ],\n  \"summary_7d\": {\n    \"key_0\": 580,\n    \"key_1\": 6572\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dee71665-dd72-45f1-b178-0dbe38f0d06b",
+          "name": "Cost attribution per team (messages / cost / delivered / failed)",
+          "request": {
+            "name": "Cost attribution per team (messages / cost / delivered / failed)",
+            "description": {
+              "content": "Returns one row per team plus `(未分類)` for untagged sends, so the rows sum to the\naccount total. Money is shared (one wallet, one invoice per 統編); this is a reporting\nbreakdown for internal chargeback, **not** a wallet split.\n\nWindowing: pass `from`/`to` for an exact billing period (monthly chargeback), or `days`\nfor a rolling window. `from`/`to` take precedence when supplied.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "sms",
+                "by-team"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "days",
+                  "value": "30",
+                  "description": "Rolling window in days (ignored if from/to given)."
+                },
+                {
+                  "disabled": false,
+                  "key": "from",
+                  "value": "<dateTime>",
+                  "description": "Start of an exact range (ISO date/datetime, inclusive)."
+                },
+                {
+                  "disabled": false,
+                  "key": "to",
+                  "value": "<dateTime>",
+                  "description": "End of an exact range (ISO date/datetime, exclusive)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b09bd901-103f-4020-8cb8-50bb3f23d03f",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "by-team"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "days",
+                      "value": "30"
+                    },
+                    {
+                      "key": "from",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "to",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": false,\n  \"days\": 4032,\n  \"from\": \"string\",\n  \"to\": \"string\",\n  \"total_cost_cents\": 8804,\n  \"teams\": [\n    {\n      \"team\": \"string\",\n      \"msgs\": 5849,\n      \"cost_cents\": 2259,\n      \"delivered\": 9510,\n      \"failed\": 2679\n    },\n    {\n      \"team\": \"string\",\n      \"msgs\": 7030,\n      \"cost_cents\": 300,\n      \"delivered\": 726,\n      \"failed\": 4439\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "aae7e7b7-e2a5-4cce-a184-72a00395fedb",
+          "name": "Daily volume + delivery metrics",
+          "request": {
+            "name": "Daily volume + delivery metrics",
+            "description": {},
+            "url": {
+              "path": [
+                "sms",
+                "metrics"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "days",
+                  "value": "30"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d3e1c8e3-b7bf-4fc0-aa44-97a6ef34bdb2",
+              "name": "Aggregated metrics",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "sms",
+                    "metrics"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "days",
+                      "value": "30"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": true,\n  \"days\": 9174,\n  \"daily\": [\n    {\n      \"day\": \"1993-01-16\",\n      \"total\": 6380,\n      \"delivered\": 2962,\n      \"failed\": 158,\n      \"cost_cents\": 9647\n    },\n    {\n      \"day\": \"1974-10-19\",\n      \"total\": 6956,\n      \"delivered\": 3901,\n      \"failed\": 2797,\n      \"cost_cents\": 370\n    }\n  ],\n  \"totals\": {\n    \"total\": 1281,\n    \"delivered\": 6438,\n    \"failed\": 9169,\n    \"cost_cents\": 9847,\n    \"avg_latency_sec\": 7827.038017318002\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://sms.cresclab.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2e2caac7-379e-4354-b919-49530e1cdc4f",
+    "name": "MAAC Go Broadcast SMS API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "MAAC Go — Taiwan-first self-serve SMS platform. Send transactional (OTP /\norder / reminder) and broadcast SMS with NCC compliance, MAAC delivery\nbackend, and real-time DLR webhooks.\n\n- Base URL: `https://sms.cresclab.com/api`\n- Auth: `Authorization: Bearer <sk_live_... or sk_test_...>`\n- New accounts receive NT$50 trial credit on signup, enough to send real test SMS immediately.\n- API keys are scoped and wallet-backed; sending debits the account balance unless your deployment uses a mock SMS/payment adapter.\n- All phone numbers use E.164 (`+886912345678`). 09xxxxxxxx is also accepted.\n- Cost: NT$0.78 per SMS segment (Chinese: 70 chars/segment · English: 160/segment).\n- Rate-limit errors return `429 rate_limited` with limit/used details and retry guidance when available.\n- Delivery confirmations arrive asynchronously via webhook (`sms.delivered`\n  / `sms.failed`); poll `GET /sms/{id}` as a fallback.\n- MCP clients (Claude / Cursor / Windsurf) can use this spec directly, or\n  connect via `POST /api/mcp` (JSON-RPC 2.0) with the same bearer key.\n\n\nContact Support:\n Name: MAAC Go Support\n Email: info@cresclab.com",
+      "type": "text/plain"
+    }
+  }
+}

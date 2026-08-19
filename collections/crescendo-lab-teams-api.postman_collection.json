@@ -1,0 +1,292 @@
+{
+  "item": [
+    {
+      "id": "67e920bf-0d0b-432d-86aa-2beb2a8a9a58",
+      "name": "Teams",
+      "description": {
+        "content": "Cost-attribution teams. Tag sends with a team to see which team sent/spent how much (shared wallet — reporting only, not a wallet split).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3c9365a9-8a9e-4b09-8da9-98f0617a238f",
+          "name": "List cost-attribution teams (+ lifetime usage)",
+          "request": {
+            "name": "List cost-attribution teams (+ lifetime usage)",
+            "description": {},
+            "url": {
+              "path": [
+                "teams"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "fb5d1fdf-3303-4db8-8616-c46b8a9770c3",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "teams"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": true,\n  \"teams\": [\n    {\n      \"id\": 6848,\n      \"name\": \"string\",\n      \"archived\": true,\n      \"created_at\": \"1963-06-21T13:26:16.436Z\",\n      \"msg_count\": 1785,\n      \"cost_cents\": 8660\n    },\n    {\n      \"id\": 99,\n      \"name\": \"string\",\n      \"archived\": false,\n      \"created_at\": \"1988-04-12T17:43:04.745Z\",\n      \"msg_count\": 8330,\n      \"cost_cents\": 483\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0518446d-fd3f-4894-abdc-2f5e7f239975",
+          "name": "Create a team (idempotent on name; re-creates un-archive)",
+          "request": {
+            "name": "Create a team (idempotent on name; re-creates un-archive)",
+            "description": {
+              "content": "Teams are also auto-created on first use via `team` on `/sms/send` or `/broadcast`,\nso calling this explicitly is optional — handy for pre-seeding before you send.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "teams"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "509fc5b4-1e82-4220-94e1-7ce7d224d83d",
+              "name": "Created (or already existed)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "teams"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"付費會員\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"ok\": false,\n  \"team\": {\n    \"id\": 5256,\n    \"name\": \"string\",\n    \"archived\": true,\n    \"created_at\": \"2018-09-16T15:42:31.986Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d6c50564-ea42-4220-bf18-47314a14e9b3",
+          "name": "Archive a team (soft-delete; history is retained)",
+          "request": {
+            "name": "Archive a team (soft-delete; history is retained)",
+            "description": {},
+            "url": {
+              "path": [
+                "teams"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "id",
+                  "value": "<integer>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": []
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dcd5b3fa-47c9-4313-b26f-2aa9b6f957b9",
+              "name": "Archived",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "teams"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://sms.cresclab.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "0a472234-5b6f-4ec8-be46-5ad8026a34d2",
+    "name": "MAAC Go Broadcast Teams API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "MAAC Go — Taiwan-first self-serve SMS platform. Send transactional (OTP /\norder / reminder) and broadcast SMS with NCC compliance, MAAC delivery\nbackend, and real-time DLR webhooks.\n\n- Base URL: `https://sms.cresclab.com/api`\n- Auth: `Authorization: Bearer <sk_live_... or sk_test_...>`\n- New accounts receive NT$50 trial credit on signup, enough to send real test SMS immediately.\n- API keys are scoped and wallet-backed; sending debits the account balance unless your deployment uses a mock SMS/payment adapter.\n- All phone numbers use E.164 (`+886912345678`). 09xxxxxxxx is also accepted.\n- Cost: NT$0.78 per SMS segment (Chinese: 70 chars/segment · English: 160/segment).\n- Rate-limit errors return `429 rate_limited` with limit/used details and retry guidance when available.\n- Delivery confirmations arrive asynchronously via webhook (`sms.delivered`\n  / `sms.failed`); poll `GET /sms/{id}` as a fallback.\n- MCP clients (Claude / Cursor / Windsurf) can use this spec directly, or\n  connect via `POST /api/mcp` (JSON-RPC 2.0) with the same bearer key.\n\n\nContact Support:\n Name: MAAC Go Support\n Email: info@cresclab.com",
+      "type": "text/plain"
+    }
+  }
+}

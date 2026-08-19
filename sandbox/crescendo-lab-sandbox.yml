@@ -1,10 +1,11 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
 source: https://sms.cresclab.com/developers.html + openapi/crescendo-lab-maacgo-openapi.yaml
 summary: >-
   MAAC Go separates environments by API-key prefix rather than a distinct host.
   Test keys (sk_test_) and live keys (sk_live_) hit the same base URL; new
-  accounts receive NT$50 trial credit so real test SMS can be sent immediately.
+  accounts receive a one-time NT$39 trial credit (50 SMS) so real test SMS
+  can be sent immediately.
 base_url: https://sms.cresclab.com/api
 modes:
 - name: test
@@ -14,8 +15,17 @@ modes:
   key_prefix: sk_live_
   description: Production key for real sends.
 trial_credit:
-  amount: NT$50
-  note: Granted on signup — enough to send real test SMS immediately.
+  amount: NT$39
+  messages: 50
+  one_time: true
+  card_required: false
+  signup: https://sms.cresclab.com/signup.html
+  note: >-
+    Granted on signup, no credit card. Corrected 2026-08-13: the provider
+    previously published NT$50; the live OpenAPI info block and llms.txt now
+    both read "a one-time NT$39 trial credit (50 SMS)". The marketing pages and
+    the shipped SDK descriptions still say NT$50, so the two disagree — the
+    machine-readable contract is treated as authoritative here.
 mock_adapter:
   supported: true
   note: >-
@@ -26,3 +36,29 @@ test_values:
     No fixed published test phone numbers or fixture tokens. E.164 numbers
     (+886912345678) or TW local (0912345678) are accepted; delivery is real
     unless a mock adapter is configured.
+
+smoke_test:
+  note: The provider publishes a four-step install verification sequence (install.html section 4).
+  source: https://sms.cresclab.com/install.html
+  steps:
+  - Ask the agent to list the maacgo MCP tools — expect 9.
+  - Ask for wallet_balance — expect a NT$ figure.
+  - Send an SMS to your own handset with a 【brand】 prefix — expect a message_id sms_xxx.
+  - Open https://sms.cresclab.com/app.html#logs and confirm the row shows sent/delivered.
+ncc_test_cases:
+  note: >-
+    Published pass/fail examples for the server-side NCC signature rule. These
+    are the provider's own documented examples, verbatim.
+  source: https://sms.cresclab.com/install.html
+  cases:
+  - body: 【MAAC Go】驗證碼 483291
+    result: pass
+  - body: 驗證碼 483291
+    result: reject
+    code: ncc_blocked / NO_SIGNATURE
+  - body: 【MAAC】123
+    result: reject
+    reason: signature shorter than 4 characters
+  - body: 【極長品牌名稱超出限制】test
+    result: reject
+    reason: signature longer than 8 characters

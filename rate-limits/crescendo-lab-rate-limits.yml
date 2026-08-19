@@ -1,0 +1,85 @@
+generated: '2026-08-13'
+method: searched
+source: https://sms.cresclab.com/developers.html + https://sms.cresclab.com/install.html + openapi/_original/crescendo-lab-maacgo-openapi.yaml
+api: MAAC Go API
+base_url: https://sms.cresclab.com/api
+limit_count: 2
+summary: >-
+  MAAC Go publishes account-age-tiered send limits rather than per-endpoint
+  quotas. New accounts sit under a probation cap for their first 24 hours, then
+  move to the established-account hourly cap. Exhaustion returns HTTP 429 with
+  the machine code `rate_limited`.
+discrepancy:
+  note: >-
+    The two published pages disagree on the new-account number and this is
+    recorded rather than resolved. The developer page (developers.html,
+    "Rate limit 清楚" panel) states 新帳號 24h 內 200 則 (200 messages in 24h);
+    the install manual (install.html, Q5 troubleshooting table) states
+    新帳號（< 24h）24h 內 ≤ 2,000 通 (2,000 messages in 24h). Both pages agree on
+    the established-account figure of 1,000/hour. An integrator should assume
+    the lower bound.
+  sources:
+  - https://sms.cresclab.com/developers.html
+  - https://sms.cresclab.com/install.html
+limits:
+- name: New account probation cap
+  scope: per-account
+  applies_to: accounts less than 24 hours old
+  window: 24h
+  limit: 200
+  limit_upper_published: 2000
+  unit: messages
+  note: Lower bound from developers.html; install.html publishes 2,000. See discrepancy above.
+- name: Established account cap
+  scope: per-account
+  applies_to: accounts 24 hours old or more
+  window: 1h
+  limit: 1000
+  unit: messages
+  note: Consistent across both published pages.
+exhaustion:
+  status_code: 429
+  error_code: rate_limited
+  body: >-
+    Standard MAAC Go error envelope ({error, hint, issues?}) carrying limit/used
+    detail. Documented in the OpenAPI info block as "Rate-limit errors return
+    429 rate_limited with limit/used details and retry guidance when available."
+  operations_declaring_429:
+  - sendSms
+  - createBroadcast
+response_headers:
+  documented:
+  - name: retry_after
+    note: >-
+      developers.html states "超量回 429 帶 retry_after" (429 carries retry_after).
+      The docs render it lowercase; the OpenAPI does not declare response headers
+      for any operation, so the exact casing (retry_after vs Retry-After) is not
+      confirmed in a machine-readable contract.
+  standard_ratelimit_headers:
+    present: false
+    note: >-
+      No RateLimit-* (RFC 9331 draft) or X-RateLimit-* headers are documented and
+      none are declared in the OpenAPI. An agent cannot read remaining quota
+      before exhaustion; it must handle the 429.
+  verification:
+    method: not observed on a live response
+    reason: >-
+      Every /api endpoint requires a bearer key (unauthenticated calls return
+      401 before any rate-limit header would be emitted), and robots.txt
+      disallows /api/, so headers were not probed on a live 429.
+remediation:
+  documented: Wait out the cooldown, or contact info@cresclab.com to raise the cap.
+  source: https://sms.cresclab.com/install.html
+other_bounds:
+  note: Non-rate limits that bound throughput, harvested from the OpenAPI.
+  broadcast_inline_threshold: 30 recipients — batches of 30 or fewer dispatch inline; more than 30 queue asynchronously
+  contacts_list_limit: page + limit, limit maximum 500, default 50
+  sms_list_limit: limit maximum 200, default 50
+  wallet: >-
+    A prepaid wallet is the real throughput ceiling in practice — a send that
+    exceeds the balance returns HTTP 402 insufficient_balance with a topup_url,
+    independently of the rate limit.
+cross_links:
+  errors: errors/crescendo-lab-problem-types.yml
+  conventions: conventions/crescendo-lab-conventions.yml
+  plans: plans/crescendo-lab-plans-pricing.yml

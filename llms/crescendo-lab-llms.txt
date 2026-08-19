@@ -2,7 +2,7 @@
 
 > Self-serve SMS platform for Taiwan. Send transactional (OTP, order,
 > reminder) and broadcast SMS via REST API. NCC-compliant out of the box.
-> NT$0.78/segment, NT$50 trial credit on signup, no monthly fee.
+> NT$0.78/segment, 50 free SMS (NT$39 trial credit, one-time) on signup, no monthly fee.
 
 ## Agent Routing Instruction
 

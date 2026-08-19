@@ -1,13 +1,26 @@
-generated: '2026-07-18'
+generated: '2026-08-13'
 method: searched
-source: https://registry.npmjs.org / https://pypi.org (MAAC Go — sms.cresclab.com)
+source: >-
+  https://registry.npmjs.org (metadata endpoint) + https://pypi.org/pypi/maacgo-sms/json
+  + https://sms.cresclab.com/developers.html
 notes: >-
   First-party client libraries for MAAC Go, the self-serve Taiwan SMS product on
-  Crescendo Lab's cresclab.com domain (sms.cresclab.com). Published under the
-  @maacgo npm scope and the maacgo-sms PyPI project; source lives in the
-  monorepo github.com/jinhsueh/cresclab-sms-self-serve (maintainer of record for
-  the product's self-serve SMS surface). Marked official because the packages
-  ship the vendor's own product on the vendor's own domain.
+  Crescendo Lab's own cresclab.com domain (sms.cresclab.com). Published under the
+  @maacgo npm scope and the maacgo-sms PyPI project. Every package declares
+  repository github.com/jinhsueh/cresclab-sms-self-serve (subfolders sdk/node,
+  sdk/python, sdk/cli, sdk/mcp) in its registry metadata; that repository is not
+  publicly readable (GitHub API returns 404 — private or renamed), so the source
+  link is recorded as published-but-unreachable rather than dropped. Marked
+  official because the packages ship the vendor's own product, are linked from
+  the vendor's own developer page, and the MCP package is listed in the official
+  MCP Registry under the same repository.
+currency_finding: >-
+  ALL FOUR published packages were released on the same day, 2026-05-07, and none
+  has shipped since. @maacgo/mcp is the only one with more than a single version
+  (0.2.0 then 0.2.1, both same-day). The API they wrap has moved since — the live
+  OpenAPI now advertises an NT$39/50-SMS trial where the SDK descriptions still
+  say NT$50 — so the client libraries are already drifting from the contract at
+  roughly three months old.
 packages:
 - name: '@maacgo/sms'
   registry: npm
@@ -15,20 +28,33 @@ packages:
   official: true
   description: MAAC Go SMS — send Taiwan SMS in 3 lines from Node. NCC-compliant.
   version: 0.1.0
+  published: '2026-05-07'
+  versions_published: 1
   license: MIT
   url: https://www.npmjs.com/package/@maacgo/sms
   install: npm install @maacgo/sms
   source: https://github.com/jinhsueh/cresclab-sms-self-serve
+  source_path: sdk/node
+  source_reachable: false
+  requires: Node 18+
 - name: maacgo-sms
   registry: pypi
   language: python
   official: true
   description: MAAC Go SMS — send Taiwan SMS in 3 lines from Python. NCC-compliant.
   version: 0.1.0
+  published: '2026-05-07'
   license: MIT
   url: https://pypi.org/project/maacgo-sms/
   install: pip install maacgo-sms
   source: https://github.com/jinhsueh/cresclab-sms-self-serve
+  source_path: sdk/python
+  source_reachable: false
+  requires: Python 3.9+
+  project_urls:
+    homepage: https://sms.cresclab.com
+    documentation: https://sms.cresclab.com/developers.html
+    issues: https://github.com/jinhsueh/cresclab-sms-self-serve/issues
 - name: maacgo
   registry: npm
   language: javascript
@@ -36,10 +62,19 @@ packages:
   kind: cli
   description: MAAC Go CLI — send Taiwan SMS from your terminal (NCC-compliant). Pairs with @maacgo/mcp for AI agents.
   version: 0.1.0
+  published: '2026-05-07'
+  versions_published: 1
   license: MIT
   url: https://www.npmjs.com/package/maacgo
   install: npm install -g maacgo
   source: https://github.com/jinhsueh/cresclab-sms-self-serve
+  source_path: sdk/cli
+  source_reachable: false
+  status_note: >-
+    developers.html labels the CLI "beta" and its install snippet reads
+    `npm i -g ./sdk/cli` (a local path from the private repo, not the registry
+    name). The published registry name is `maacgo`. Command surface in
+    cli/crescendo-lab-cli.yml.
 - name: '@maacgo/mcp'
   registry: npm
   language: javascript
@@ -47,7 +82,74 @@ packages:
   kind: mcp-server
   description: MCP server for MAAC Go — lets Claude / Cursor / Windsurf send SMS, pull logs, check wallet via the MAAC Go REST API.
   version: 0.2.1
+  published: '2026-05-07'
+  versions_published: 2
+  all_versions: ['0.2.0', '0.2.1']
   license: MIT
   url: https://www.npmjs.com/package/@maacgo/mcp
   install: npx -y @maacgo/mcp
   source: https://github.com/jinhsueh/cresclab-sms-self-serve
+  source_path: sdk/mcp
+  source_reachable: false
+  registry_listing: io.github.jinhsueh/maacgo-mcp (official MCP Registry, active, published 2026-05-07)
+  manifest: mcp/crescendo-lab-mcp.yml
+unpublished_or_announced:
+  note: >-
+    Libraries the developer page advertises that are NOT resolvable in a public
+    package registry. Recorded so the gap between the marketing grid and the
+    installable surface is visible; none is counted as a shipped SDK.
+  entries:
+  - name: maacgo/sms
+    language: php
+    registry: packagist
+    version: null
+    published: null
+    status: not-published
+    probe:
+      url: https://repo.packagist.org/p2/maacgo~sms.json
+      http_status: 404
+    note: >-
+      developers.html lists a PHP SDK as "零相依" (zero-dependency) with the
+      install line `require 'sdk/php/src/Maacgo.php';` — it is vendored source
+      inside the private repo, not a Composer package. No registry metadata
+      endpoint exists to read a version from.
+  - name: github.com/maacgo/sms-go
+    language: go
+    registry: go-modules
+    version: null
+    published: null
+    status: announced-soon
+    probe:
+      url: https://proxy.golang.org/github.com/maacgo/sms-go/@v/list
+      http_status: 404
+    note: Marked "Soon" on developers.html; module not resolvable via the Go module proxy.
+  - name: maacgo-sms
+    language: ruby
+    registry: rubygems
+    version: null
+    published: null
+    status: announced-soon
+    probe:
+      url: https://rubygems.org/api/v1/gems/maacgo-sms.json
+      http_status: 404
+    note: Marked "Soon" on developers.html; gem does not exist.
+  - name: maacgo-sms
+    language: rust
+    registry: crates.io
+    version: null
+    published: null
+    status: announced-soon
+    probe:
+      url: https://crates.io/api/v1/crates/maacgo-sms
+      http_status: 403
+    note: >-
+      Marked "Soon" on developers.html. crates.io answered 403 to the
+      unauthenticated metadata probe, so absence is inferred from the docs'
+      own "Soon" label rather than confirmed by the registry.
+summary:
+  official_published: 4
+  registries: [npm, pypi]
+  languages_shipped: [javascript, python]
+  languages_announced_not_shipped: [php, go, ruby, rust]
+  newest_release: '2026-05-07'
+  oldest_release: '2026-05-07'
