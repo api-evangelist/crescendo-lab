@@ -136,6 +136,8 @@ apis:
   humanURL: https://sms.cresclab.com/developers.html
   baseURL: https://sms.cresclab.com/api
   tags:
+  - Team
+  tags_raw:
   - Teams
   properties:
   - type: OpenAPI
