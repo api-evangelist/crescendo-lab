@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: MAAC Go Broadcast API
   version: 1.0.0
@@ -83,25 +83,43 @@ paths:
                       $ref: '#/components/schemas/BroadcastSummary'
 components:
   schemas:
-    BroadcastQueuedResponse:
+    BroadcastSummary:
       type: object
       properties:
-        ok:
-          type: boolean
-        broadcast_id:
+        id:
           type: string
-        status:
+        name:
           type: string
-          enum:
-          - queued
         recipient_count:
           type: integer
         cost_cents:
           type: integer
-        dispatch:
+        status:
           type: string
           enum:
-          - async
+          - scheduled
+          - sending
+          - sent
+          - failed
+        delivered_count:
+          type: integer
+        failed_count:
+          type: integer
+        sent_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        scheduled_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        finished_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
     BroadcastCreateRequest:
       type: object
       required:
@@ -156,47 +174,32 @@ components:
         balance_cents:
           type: integer
         team:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Resolved cost-attribution team (null = 未分類).
         team_created:
           type: boolean
           description: True if this broadcast auto-created the team.
-    BroadcastSummary:
+    BroadcastQueuedResponse:
       type: object
       properties:
-        id:
+        ok:
+          type: boolean
+        broadcast_id:
           type: string
-        name:
+        status:
           type: string
+          enum:
+          - queued
         recipient_count:
           type: integer
         cost_cents:
           type: integer
-        status:
+        dispatch:
           type: string
           enum:
-          - scheduled
-          - sending
-          - sent
-          - failed
-        delivered_count:
-          type: integer
-        failed_count:
-          type: integer
-        sent_count:
-          type: integer
-        created_at:
-          type: string
-          format: date-time
-        scheduled_at:
-          type: string
-          format: date-time
-          nullable: true
-        finished_at:
-          type: string
-          format: date-time
-          nullable: true
+          - async
   securitySchemes:
     bearerAuth:
       type: http

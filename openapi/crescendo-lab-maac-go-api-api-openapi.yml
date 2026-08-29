@@ -1,0 +1,112 @@
+openapi: 3.2.0
+info:
+  title: MAAC Go API
+  version: 1.0.0
+  description: "MAAC Go — Taiwan-first self-serve SMS platform. Send transactional (OTP /\norder / reminder) and broadcast SMS with NCC compliance, MAAC delivery\nbackend, and real-time DLR webhooks.\n\n- Base URL: `https://sms.cresclab.com/api`\n- Auth: `Authorization: Bearer <sk_live_... or sk_test_...>`\n- New accounts receive a one-time NT$39 trial credit (50 SMS) on signup, enough to send real test SMS immediately.\n- API keys are scoped and wallet-backed; sending debits the account balance unless your deployment uses a mock SMS/payment adapter.\n- All phone numbers use E.164 (`+886912345678`). 09xxxxxxxx is also accepted.\n- Cost: NT$0.78 per SMS segment (Chinese: 70 chars/segment · English: 160/segment).\n- Rate-limit errors return `429 rate_limited` with limit/used details and retry guidance when available.\n- Delivery confirmations arrive asynchronously via webhook (`sms.delivered`\n  / `sms.failed`); poll `GET /sms/{id}` as a fallback.\n- MCP clients (Claude / Cursor / Windsurf) can use this spec directly, or\n  connect via `POST /api/mcp` (JSON-RPC 2.0) with the same bearer key.\n"
+  contact:
+    name: MAAC Go Support
+    email: info@cresclab.com
+    url: https://sms.cresclab.com
+  license:
+    name: Commercial
+    url: https://sms.cresclab.com/terms.html
+servers:
+- url: https://sms.cresclab.com/api
+  description: Production
+security:
+- bearerAuth: []
+tags:
+- name: MAAC Go API
+paths: {}
+webhooks:
+  sms.delivered:
+    post:
+      summary: SMS reached the recipient's handset
+      description: 'Delivered to your webhook endpoint when MAAC''s DLR confirms delivery.
+
+        Sign with HMAC-SHA256: `X-Cresclab-Signature: <hex_digest>` where
+
+        `hex_digest = HMAC_SHA256(your_webhook_secret, raw_request_body)`.
+
+        '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEvent'
+      responses:
+        '200':
+          description: ACK with any 2xx
+      tags:
+      - MAAC Go API
+  sms.failed:
+    post:
+      summary: Final delivery failure (number invalid / blocked / undeliverable)
+      description: Wallet is auto-refunded for failed messages.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEvent'
+      responses:
+        '200':
+          description: ACK with any 2xx
+      tags:
+      - MAAC Go API
+  sms.sent:
+    post:
+      summary: Message accepted by carrier (interim state)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEvent'
+      responses:
+        '200':
+          description: ACK
+      tags:
+      - MAAC Go API
+components:
+  schemas:
+    WebhookEvent:
+      type: object
+      description: 'Outbound event sent to your configured webhook URL. Verify `X-Cresclab-Signature`
+
+        header: `hmac_sha256(your_webhook_secret, raw_body_bytes).hex() == header_value`.
+
+        '
+      properties:
+        event:
+          type: string
+          enum:
+          - sms.sent
+          - sms.delivered
+          - sms.failed
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              example: sms_abc123
+            to:
+              type: string
+            status:
+              type: string
+            error:
+              type:
+              - string
+              - 'null'
+        created_at:
+          type: string
+          format: date-time
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: '`Authorization: Bearer <api_key>`. Production keys start with `sk_live_`,
+
+        test keys with `sk_test_` for environment separation. Sending still follows
+
+        the account wallet and deployment adapter settings.
+
+        '

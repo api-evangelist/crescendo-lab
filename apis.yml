@@ -172,6 +172,16 @@ apis:
     url: https://sms.cresclab.com/openapi.yaml
   - type: GettingStarted
     url: https://sms.cresclab.com/developers.html
+- aid: crescendo-lab:crescendo-lab-maac-go-api-api
+  name: Crescendo Lab MAAC Go API
+  description: The MAAC Go API API from Crescendo Lab — 0 operation(s) for maac go api.
+  humanURL: https://sms.cresclab.com/developers.html
+  baseURL: https://sms.cresclab.com/api
+  tags:
+  - MAAC Go API
+  properties:
+  - type: OpenAPI
+    url: openapi/crescendo-lab-maac-go-api-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

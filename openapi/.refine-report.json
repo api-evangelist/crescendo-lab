@@ -1,20 +1,30 @@
 {
   "provider": "crescendo-lab",
   "sources": [
-    "crescendo-lab-broadcast-api-openapi.yml",
-    "crescendo-lab-contacts-api-openapi.yml",
-    "crescendo-lab-sms-api-openapi.yml",
-    "crescendo-lab-teams-api-openapi.yml"
+    "_original/crescendo-lab-maacgo-openapi.yaml"
   ],
   "outputs": [
     "crescendo-lab-broadcast-api-openapi.yml",
     "crescendo-lab-contacts-api-openapi.yml",
+    "crescendo-lab-maac-go-api-api-openapi.yml",
     "crescendo-lab-sms-api-openapi.yml",
     "crescendo-lab-teams-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "crescendo-lab-maacgo-openapi.yaml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "crescendo-lab-maacgo-openapi.yaml: tagged webhooks POST sms.delivered -> MAAC Go API",
+    "crescendo-lab-maacgo-openapi.yaml: tagged webhooks POST sms.failed -> MAAC Go API",
+    "crescendo-lab-maacgo-openapi.yaml: tagged webhooks POST sms.sent -> MAAC Go API",
+    "crescendo-lab-maacgo-openapi.yaml: declared missing tag: MAAC Go API"
+  ],
+  "skipped": [
+    "crescendo-lab-broadcast-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crescendo-lab-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crescendo-lab-sms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crescendo-lab-teams-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
