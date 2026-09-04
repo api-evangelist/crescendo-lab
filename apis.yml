@@ -12,16 +12,20 @@ deliveryModel:
   generated: '2026-08-28'
   method: derived
 accessModel:
-  pricing: unknown
+  pricing: freemium
   onboarding: self-serve
-  trial: false
-  try_now: false
+  trial: true
+  try_now: true
   public: false
-  label: Self-serve signup
-  confidence: medium
+  label: Freemium (free trial) · Self-serve signup
+  confidence: high
   source:
+  - plans
   - authentication
-  generated: '2026-07-22'
+  - rate-limits
+  - security
+  - sandbox
+  generated: '2026-09-03'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/crescendo-lab.png
 name: Crescendo Lab
