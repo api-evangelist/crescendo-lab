@@ -19,11 +19,13 @@
     "crescendo-lab-maacgo-openapi.yaml: tagged webhooks POST sms.delivered -> MAAC Go API",
     "crescendo-lab-maacgo-openapi.yaml: tagged webhooks POST sms.failed -> MAAC Go API",
     "crescendo-lab-maacgo-openapi.yaml: tagged webhooks POST sms.sent -> MAAC Go API",
-    "crescendo-lab-maacgo-openapi.yaml: declared missing tag: MAAC Go API"
+    "crescendo-lab-maacgo-openapi.yaml: declared missing tag: MAAC Go API",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "crescendo-lab-broadcast-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "crescendo-lab-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "crescendo-lab-maac-go-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "crescendo-lab-sms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "crescendo-lab-teams-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]

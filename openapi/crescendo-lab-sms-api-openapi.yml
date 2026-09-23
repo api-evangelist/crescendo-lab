@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: MAAC Go SMS API
   version: 1.0.0
-  description: "MAAC Go — Taiwan-first self-serve SMS platform. Send transactional (OTP /\norder / reminder) and broadcast SMS with NCC compliance, MAAC delivery\nbackend, and real-time DLR webhooks.\n\n- Base URL: `https://sms.cresclab.com/api`\n- Auth: `Authorization: Bearer <sk_live_... or sk_test_...>`\n- New accounts receive a one-time NT$39 trial credit (50 SMS) on signup, enough to send real test SMS immediately.\n- API keys are scoped and wallet-backed; sending debits the account balance unless your deployment uses a mock SMS/payment adapter.\n- All phone numbers use E.164 (`+886912345678`). 09xxxxxxxx is also accepted.\n- Cost: NT$0.78 per SMS segment (Chinese: 70 chars/segment · English: 160/segment).\n- Rate-limit errors return `429 rate_limited` with limit/used details and retry guidance when available.\n- Delivery confirmations arrive asynchronously via webhook (`sms.delivered`\n  / `sms.failed`); poll `GET /sms/{id}` as a fallback.\n- MCP clients (Claude / Cursor / Windsurf) can use this spec directly, or\n  connect via `POST /api/mcp` (JSON-RPC 2.0) with the same bearer key.\n"
+  description: MAAC Go — Taiwan-first self-serve SMS platform.
   contact:
     name: MAAC Go Support
     email: info@cresclab.com
@@ -28,9 +28,7 @@ paths:
 
         no LINE fallback. Returns after MAAC accepts the request; final delivery
 
-        status arrives via the `sms.delivered` / `sms.failed` webhook.
-
-        '
+        status arrives via the `sms.delivered` / `sms.failed` webhook.'
       operationId: sendSms
       requestBody:
         required: true
@@ -173,9 +171,7 @@ paths:
 
         Windowing: pass `from`/`to` for an exact billing period (monthly chargeback), or `days`
 
-        for a rolling window. `from`/`to` take precedence when supplied.
-
-        '
+        for a rolling window. `from`/`to` take precedence when supplied.'
       operationId: smsByTeam
       parameters:
       - in: query
@@ -262,34 +258,96 @@ paths:
                 $ref: '#/components/schemas/MetricsResponse'
 components:
   schemas:
-    SmsSendRequest:
+    SmsSendResponse:
       type: object
-      required:
-      - to
-      - body
       properties:
-        to:
+        ok:
+          type: boolean
+        message_id:
           type: string
-          description: E.164 (`+886912345678`) or TW local (`0912345678`)
-          example: '+886912345678'
-        body:
-          type: string
-          maxLength: 1000
-          description: SMS text. 70 chars = 1 segment (Chinese), 160 (ASCII). Must include `【brand】` prefix and `STOP` / `退訂` for marketing.
-        from:
-          type: string
-          description: Sender ID. Defaults to Cresclab shared short-code `1990`.
-        type:
+          example: sms_abc123
+        status:
           type: string
           enum:
-          - otp
-          - notification
-          - marketing
-          description: Controls routing priority and compliance checks.
+          - queued
+          - sent
+          - delivered
+          - failed
+        segments:
+          type: integer
+        cost_cents:
+          type: integer
+          description: Amount debited in NT cents (78 = NT$0.78)
+        balance_cents:
+          type: integer
         team:
+          type:
+          - string
+          - 'null'
+          description: Resolved cost-attribution team (null = 未分類). Echo of what was tagged.
+        team_created:
+          type: boolean
+          description: True if this send auto-created the team (first use of the name).
+    ErrorResponse:
+      type: object
+      properties:
+        error:
           type: string
-          description: Cost-attribution team for this send (e.g. `付費會員`). Overrides the API key's bound team. An unknown name is auto-created, so a typo surfaces as a stray team rather than vanishing. Omit to inherit the key's team or fall to 未分類.
-          example: 付費會員
+          example: ncc_blocked
+        hint:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            properties:
+              level:
+                type: string
+                enum:
+                - block
+                - warn
+              code:
+                type: string
+              reason:
+                type: string
+    MetricsResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        days:
+          type: integer
+        daily:
+          type: array
+          items:
+            type: object
+            properties:
+              day:
+                type: string
+                format: date
+              total:
+                type: integer
+              delivered:
+                type: integer
+              failed:
+                type: integer
+              cost_cents:
+                type: integer
+        totals:
+          type: object
+          properties:
+            total:
+              type: integer
+            delivered:
+              type: integer
+            failed:
+              type: integer
+            cost_cents:
+              type: integer
+            avg_latency_sec:
+              type:
+              - number
+              - 'null'
     SmsDetail:
       type: object
       properties:
@@ -330,96 +388,34 @@ components:
           - string
           - 'null'
           description: Upstream MAAC pnp_message_id
-    ErrorResponse:
+    SmsSendRequest:
       type: object
+      required:
+      - to
+      - body
       properties:
-        error:
+        to:
           type: string
-          example: ncc_blocked
-        hint:
+          description: E.164 (`+886912345678`) or TW local (`0912345678`)
+          example: '+886912345678'
+        body:
           type: string
-        issues:
-          type: array
-          items:
-            type: object
-            properties:
-              level:
-                type: string
-                enum:
-                - block
-                - warn
-              code:
-                type: string
-              reason:
-                type: string
-    SmsSendResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        message_id:
+          maxLength: 1000
+          description: SMS text. 70 chars = 1 segment (Chinese), 160 (ASCII). Must include `【brand】` prefix and `STOP` / `退訂` for marketing.
+        from:
           type: string
-          example: sms_abc123
-        status:
+          description: Sender ID. Defaults to Cresclab shared short-code `1990`.
+        type:
           type: string
           enum:
-          - queued
-          - sent
-          - delivered
-          - failed
-        segments:
-          type: integer
-        cost_cents:
-          type: integer
-          description: Amount debited in NT cents (78 = NT$0.78)
-        balance_cents:
-          type: integer
+          - otp
+          - notification
+          - marketing
+          description: Controls routing priority and compliance checks.
         team:
-          type:
-          - string
-          - 'null'
-          description: Resolved cost-attribution team (null = 未分類). Echo of what was tagged.
-        team_created:
-          type: boolean
-          description: True if this send auto-created the team (first use of the name).
-    MetricsResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        days:
-          type: integer
-        daily:
-          type: array
-          items:
-            type: object
-            properties:
-              day:
-                type: string
-                format: date
-              total:
-                type: integer
-              delivered:
-                type: integer
-              failed:
-                type: integer
-              cost_cents:
-                type: integer
-        totals:
-          type: object
-          properties:
-            total:
-              type: integer
-            delivered:
-              type: integer
-            failed:
-              type: integer
-            cost_cents:
-              type: integer
-            avg_latency_sec:
-              type:
-              - number
-              - 'null'
+          type: string
+          description: Cost-attribution team for this send (e.g. `付費會員`). Overrides the API key's bound team. An unknown name is auto-created, so a typo surfaces as a stray team rather than vanishing. Omit to inherit the key's team or fall to 未分類.
+          example: 付費會員
   securitySchemes:
     bearerAuth:
       type: http
