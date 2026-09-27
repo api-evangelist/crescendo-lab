@@ -258,96 +258,6 @@ paths:
                 $ref: '#/components/schemas/MetricsResponse'
 components:
   schemas:
-    SmsSendResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        message_id:
-          type: string
-          example: sms_abc123
-        status:
-          type: string
-          enum:
-          - queued
-          - sent
-          - delivered
-          - failed
-        segments:
-          type: integer
-        cost_cents:
-          type: integer
-          description: Amount debited in NT cents (78 = NT$0.78)
-        balance_cents:
-          type: integer
-        team:
-          type:
-          - string
-          - 'null'
-          description: Resolved cost-attribution team (null = 未分類). Echo of what was tagged.
-        team_created:
-          type: boolean
-          description: True if this send auto-created the team (first use of the name).
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          example: ncc_blocked
-        hint:
-          type: string
-        issues:
-          type: array
-          items:
-            type: object
-            properties:
-              level:
-                type: string
-                enum:
-                - block
-                - warn
-              code:
-                type: string
-              reason:
-                type: string
-    MetricsResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        days:
-          type: integer
-        daily:
-          type: array
-          items:
-            type: object
-            properties:
-              day:
-                type: string
-                format: date
-              total:
-                type: integer
-              delivered:
-                type: integer
-              failed:
-                type: integer
-              cost_cents:
-                type: integer
-        totals:
-          type: object
-          properties:
-            total:
-              type: integer
-            delivered:
-              type: integer
-            failed:
-              type: integer
-            cost_cents:
-              type: integer
-            avg_latency_sec:
-              type:
-              - number
-              - 'null'
     SmsDetail:
       type: object
       properties:
@@ -416,6 +326,96 @@ components:
           type: string
           description: Cost-attribution team for this send (e.g. `付費會員`). Overrides the API key's bound team. An unknown name is auto-created, so a typo surfaces as a stray team rather than vanishing. Omit to inherit the key's team or fall to 未分類.
           example: 付費會員
+    SmsSendResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        message_id:
+          type: string
+          example: sms_abc123
+        status:
+          type: string
+          enum:
+          - queued
+          - sent
+          - delivered
+          - failed
+        segments:
+          type: integer
+        cost_cents:
+          type: integer
+          description: Amount debited in NT cents (78 = NT$0.78)
+        balance_cents:
+          type: integer
+        team:
+          type:
+          - string
+          - 'null'
+          description: Resolved cost-attribution team (null = 未分類). Echo of what was tagged.
+        team_created:
+          type: boolean
+          description: True if this send auto-created the team (first use of the name).
+    MetricsResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        days:
+          type: integer
+        daily:
+          type: array
+          items:
+            type: object
+            properties:
+              day:
+                type: string
+                format: date
+              total:
+                type: integer
+              delivered:
+                type: integer
+              failed:
+                type: integer
+              cost_cents:
+                type: integer
+        totals:
+          type: object
+          properties:
+            total:
+              type: integer
+            delivered:
+              type: integer
+            failed:
+              type: integer
+            cost_cents:
+              type: integer
+            avg_latency_sec:
+              type:
+              - number
+              - 'null'
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: ncc_blocked
+        hint:
+          type: string
+        issues:
+          type: array
+          items:
+            type: object
+            properties:
+              level:
+                type: string
+                enum:
+                - block
+                - warn
+              code:
+                type: string
+              reason:
+                type: string
   securitySchemes:
     bearerAuth:
       type: http
