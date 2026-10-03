@@ -113,6 +113,25 @@ components:
         team_created:
           type: boolean
           description: True if this broadcast auto-created the team.
+    BroadcastQueuedResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        broadcast_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+        recipient_count:
+          type: integer
+        cost_cents:
+          type: integer
+        dispatch:
+          type: string
+          enum:
+          - async
     BroadcastCreateRequest:
       type: object
       required:
@@ -142,25 +161,6 @@ components:
           type: string
           description: Cost-attribution team for the whole broadcast (e.g. `電商`). Overrides the API key's bound team; an unknown name is auto-created.
           example: 電商
-    BroadcastQueuedResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        broadcast_id:
-          type: string
-        status:
-          type: string
-          enum:
-          - queued
-        recipient_count:
-          type: integer
-        cost_cents:
-          type: integer
-        dispatch:
-          type: string
-          enum:
-          - async
     BroadcastSummary:
       type: object
       properties:
