@@ -81,86 +81,6 @@ paths:
                       $ref: '#/components/schemas/BroadcastSummary'
 components:
   schemas:
-    BroadcastSentResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        broadcast_id:
-          type: string
-        status:
-          type: string
-          enum:
-          - sent
-        recipient_count:
-          type: integer
-        delivered:
-          type: integer
-          description: Accepted by carrier — final status via webhook
-        failed:
-          type: integer
-        cost_cents:
-          type: integer
-        refund_cents:
-          type: integer
-        balance_cents:
-          type: integer
-        team:
-          type:
-          - string
-          - 'null'
-          description: Resolved cost-attribution team (null = 未分類).
-        team_created:
-          type: boolean
-          description: True if this broadcast auto-created the team.
-    BroadcastQueuedResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        broadcast_id:
-          type: string
-        status:
-          type: string
-          enum:
-          - queued
-        recipient_count:
-          type: integer
-        cost_cents:
-          type: integer
-        dispatch:
-          type: string
-          enum:
-          - async
-    BroadcastCreateRequest:
-      type: object
-      required:
-      - body
-      - recipients
-      properties:
-        name:
-          type: string
-          description: Internal label for the campaign
-        body:
-          type: string
-          description: Same NCC rules as /sms/send
-        recipients:
-          type: array
-          items:
-            type: string
-            description: E.164 or 09xxxxxxxx
-          minItems: 1
-          maxItems: 10000
-        scheduled_at:
-          type: string
-          format: date-time
-          description: ISO 8601. Omit to send immediately.
-        from:
-          type: string
-        team:
-          type: string
-          description: Cost-attribution team for the whole broadcast (e.g. `電商`). Overrides the API key's bound team; an unknown name is auto-created.
-          example: 電商
     BroadcastSummary:
       type: object
       properties:
@@ -198,6 +118,86 @@ components:
           - string
           - 'null'
           format: date-time
+    BroadcastQueuedResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        broadcast_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+        recipient_count:
+          type: integer
+        cost_cents:
+          type: integer
+        dispatch:
+          type: string
+          enum:
+          - async
+    BroadcastSentResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        broadcast_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - sent
+        recipient_count:
+          type: integer
+        delivered:
+          type: integer
+          description: Accepted by carrier — final status via webhook
+        failed:
+          type: integer
+        cost_cents:
+          type: integer
+        refund_cents:
+          type: integer
+        balance_cents:
+          type: integer
+        team:
+          type:
+          - string
+          - 'null'
+          description: Resolved cost-attribution team (null = 未分類).
+        team_created:
+          type: boolean
+          description: True if this broadcast auto-created the team.
+    BroadcastCreateRequest:
+      type: object
+      required:
+      - body
+      - recipients
+      properties:
+        name:
+          type: string
+          description: Internal label for the campaign
+        body:
+          type: string
+          description: Same NCC rules as /sms/send
+        recipients:
+          type: array
+          items:
+            type: string
+            description: E.164 or 09xxxxxxxx
+          minItems: 1
+          maxItems: 10000
+        scheduled_at:
+          type: string
+          format: date-time
+          description: ISO 8601. Omit to send immediately.
+        from:
+          type: string
+        team:
+          type: string
+          description: Cost-attribution team for the whole broadcast (e.g. `電商`). Overrides the API key's bound team; an unknown name is auto-created.
+          example: 電商
   securitySchemes:
     bearerAuth:
       type: http

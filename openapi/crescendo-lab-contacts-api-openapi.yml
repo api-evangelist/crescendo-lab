@@ -117,25 +117,6 @@ components:
         created_at:
           type: string
           format: date-time
-    ContactCreateSingle:
-      type: object
-      required:
-      - phone
-      - consent_source
-      properties:
-        phone:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
-        consent_source:
-          type: string
-          description: 'Where you collected consent: signup_form / csv_import / api / manual / custom'
     ContactCreateBulk:
       type: object
       required:
@@ -162,6 +143,25 @@ components:
                 type: array
                 items:
                   type: string
+    ContactCreateSingle:
+      type: object
+      required:
+      - phone
+      - consent_source
+      properties:
+        phone:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        consent_source:
+          type: string
+          description: 'Where you collected consent: signup_form / csv_import / api / manual / custom'
   securitySchemes:
     bearerAuth:
       type: http
