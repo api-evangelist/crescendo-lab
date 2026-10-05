@@ -1,0 +1,12 @@
+{
+ "url": "https://sms.cresclab.com/openapi.yaml",
+ "requested_url": "https://sms.cresclab.com/openapi.yaml",
+ "status": 200,
+ "content_type": "text/yaml; charset=utf-8",
+ "bytes": 23383,
+ "sha256": "8bb59cbc0dfbd4e328a6351888124eaabb521d5ff62acc582616817e0d521b80",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
