@@ -152,3 +152,61 @@ plans_note: >-
   MAAC Go plans (Free Trial, Pay-as-you-go). The two negotiated entries (MAAC Go
   Volume, Custom Pricing) are quote-only and are listed but not counted as
   published plans.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - metered
+  units:
+  - message
+  plans:
+  - name: MAAC Go Free Trial
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods: []
+  - name: MAAC Go Pay-as-you-go
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - message
+    periods: []
+  - name: MAAC Go Volume (negotiated)
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Growth 成長方案
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Scale 擴張方案
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Professional 專業方案
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Enterprise 企業方案
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Custom Pricing
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
