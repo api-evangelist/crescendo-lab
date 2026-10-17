@@ -81,6 +81,57 @@ paths:
                       $ref: '#/components/schemas/BroadcastSummary'
 components:
   schemas:
+    BroadcastSentResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        broadcast_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - sent
+        recipient_count:
+          type: integer
+        delivered:
+          type: integer
+          description: Accepted by carrier — final status via webhook
+        failed:
+          type: integer
+        cost_cents:
+          type: integer
+        refund_cents:
+          type: integer
+        balance_cents:
+          type: integer
+        team:
+          type:
+          - string
+          - 'null'
+          description: Resolved cost-attribution team (null = 未分類).
+        team_created:
+          type: boolean
+          description: True if this broadcast auto-created the team.
+    BroadcastQueuedResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        broadcast_id:
+          type: string
+        status:
+          type: string
+          enum:
+          - queued
+        recipient_count:
+          type: integer
+        cost_cents:
+          type: integer
+        dispatch:
+          type: string
+          enum:
+          - async
     BroadcastSummary:
       type: object
       properties:
@@ -118,57 +169,6 @@ components:
           - string
           - 'null'
           format: date-time
-    BroadcastQueuedResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        broadcast_id:
-          type: string
-        status:
-          type: string
-          enum:
-          - queued
-        recipient_count:
-          type: integer
-        cost_cents:
-          type: integer
-        dispatch:
-          type: string
-          enum:
-          - async
-    BroadcastSentResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        broadcast_id:
-          type: string
-        status:
-          type: string
-          enum:
-          - sent
-        recipient_count:
-          type: integer
-        delivered:
-          type: integer
-          description: Accepted by carrier — final status via webhook
-        failed:
-          type: integer
-        cost_cents:
-          type: integer
-        refund_cents:
-          type: integer
-        balance_cents:
-          type: integer
-        team:
-          type:
-          - string
-          - 'null'
-          description: Resolved cost-attribution team (null = 未分類).
-        team_created:
-          type: boolean
-          description: True if this broadcast auto-created the team.
     BroadcastCreateRequest:
       type: object
       required:
